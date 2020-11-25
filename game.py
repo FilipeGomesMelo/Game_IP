@@ -5,8 +5,8 @@ import player as pl
 pg.init()
 
 # dimenções da janela
-WINDOW_WIDTH = 544
-WINDOW_HEIGHT = 544
+WINDOW_WIDTH = 672
+WINDOW_HEIGHT = 672
 
 # setup da tela
 win = pg.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
@@ -28,6 +28,9 @@ def main():
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 pg.quit()
+            if event.type == pg.KEYDOWN:
+                if event.key == pg.K_m:
+                    Rect.move_ip(10, 0)
         # fechar a janela apretando esc
         if pg.key.get_pressed()[pg.K_ESCAPE]:
             pg.quit()
@@ -38,8 +41,8 @@ def main():
         ticks_last_frame = t
         # update o jogador e as balas
         king.update(dt)
-        # desenha tudo
-        draw_all()
+        # desenha tudo 
+        draw_all() 
         # update diplay
         pg.display.update()
 

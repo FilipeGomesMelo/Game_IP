@@ -1,5 +1,6 @@
 import pygame as pg
 import projectile as proj
+from math import atan2, degrees, pi
 
 # initialize Pygame
 pg.init()
@@ -8,7 +9,6 @@ pg.init()
 #   Essa é a classe player, ela faz tudo relacionado ao jogador (movimento, vida itens etc) #
 #   A classe jogador também cria e faz update das balas pela lista de objetos self.bullet   #
 #############################################################################################
-
 
 class player(object):
     def __init__(self, x, y, width, height, window, WINDOW_WIDTH, WINDOW_HEIGHT):
@@ -42,6 +42,11 @@ class player(object):
 
         # quais armas estão ativas no momento para controlar seus efeitos e permitir que funcionam de forma acumulativo
         self.gun_active = {'shot': False, 'machine': False, 'wheel': False}
+        
+        # coordenadas mouse
+        self.mouseX = self.x
+        self.mouseY = self.y
+
 
     # responsavel por calcular e controlar o movimento do jogador
     def calculate_speed(self, keys):
@@ -100,7 +105,6 @@ class player(object):
         
         # se o tempo desde o ultimo tiro for maior que o cool down, o jogador pode atirar
         if dt_shot >= self.shot_cooldown:
-
             # essa parte é usada para ativar as diferentes armas, é apenas para debug e é temporaria
             if keys[pg.K_h]:
                 self.gun_active = {'shot': False, 'machine': False, 'wheel': False}
@@ -130,6 +134,19 @@ class player(object):
                     for i in range(0,360,45):
                         direction.append(i)
                     self.ticks_last_shot = t
+                
+                # atirar utilizando o mouse enquanto wheel esta ativa
+                if pg.mouse.get_pressed()[0]:
+                    self.mouseX, self.mouseY = pg.mouse.get_pos()
+                    dx = (self.x+self.width/2) - (self.mouseX-5)
+                    dy = (self.y+self.height/2) - (self.mouseY-5)
+                    rads = atan2(dy,-dx)
+                    rads %= 2*pi
+                    degs = round(degrees(rads), 3)
+                    direction.append(degs)
+                    for i in range(0,360, 45):
+                        direction.append((degs+i)%360)
+                    self.ticks_last_shot = t
             # caso contrario vamos ver em que direção o jogador está mirando e adicionar essa direção na lista
             else:
                 if keys[pg.K_LEFT]:
@@ -154,15 +171,38 @@ class player(object):
                 elif keys[pg.K_DOWN]:
                     self.ticks_last_shot = t
                     direction.append(270)
+
+            # atirar com o mouse, somente quando wheel nn está ativa para evitar criar balas duplicadas
+            # pg.mouse.get_pressed()[0] é true quando o jogador está segurando o botão esquerdo do mouse
+            # [1] e [2] é o botão do meio e da direita respectivamente
+            if pg.mouse.get_pressed()[0] and not(self.gun_active['wheel']):
+                # salva as cordenadas x e y do mouse
+                self.mouseX, self.mouseY = pg.mouse.get_pos()
+                # encontra a "distância" do ponto de spawn das balas do jogador pro o mouse
+                dx = (self.mouseX-5) - (self.x+self.width/2)
+                dy = (self.mouseY-5) - (self.y+self.height/2)
+
+                # calcula o angulo em graus
+                rads = atan2(-dy, dx)
+                rads %= 2*pi
+                degs = round(degrees(rads))
+
+                # salva esse angulo nas direções para poder cirar as balas
+                direction.append(degs)
+
+                # reseta o timer de shot cooldown
+                self.ticks_last_shot = t
             
             # se a shot_gun estiver ativa, colocaremos mais duas balas, a +15º e a -15º de cada bala já existente
             if self.gun_active['shot']:
                 for i in range(len(direction)):
                     direction.append((direction[i]-15)%360)
                     direction.append((direction[i]+15)%360)
-        
+              
+
         # adiciona as balas novas nas direções dadas a lista
         self.add_bullets(direction)
+                
         # deleta as balas que sairam da tela
         self.del_bullets()
     
@@ -185,7 +225,7 @@ class player(object):
 
         # ajusta a velocidade do cooldown das balas, temporaria, fazer função propria para isso quando possível    
         if self.gun_active['machine']:
-            self.shot_cooldown = self.shot_cooldown_normal/1.5
+            self.shot_cooldown = self.shot_cooldown_normal/2
         else:
             self.shot_cooldown = self.shot_cooldown_normal
         
