@@ -21,12 +21,12 @@ class player(object):
         self.height = height
 
         # velocidade linear do jogador e as projeções dessa velocidade no eixo x e y para quando ele se move em 45º
-        self.vel = 0.45
+        self.vel = 0.25
         self.d_vel = self.vel/(2**(1/2))
 
         # quanto tempo passou desde o ultimo tiro e quanto tempo até ele poder atirar novamente
         self.ticks_last_shot = 0
-        self.shot_cooldown = 250
+        self.shot_cooldown = 500
         self.shot_cooldown_normal = self.shot_cooldown
 
         # janela em que o jogador vai ser desenhado e suas dimenções
