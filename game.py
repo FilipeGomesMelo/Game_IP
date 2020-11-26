@@ -48,7 +48,6 @@ def main():
         ticks_last_frame = t
         # update o jogador e as balas
         king.update(dt, mapa)
-
         # desenha tudo 
         draw_all() 
 
