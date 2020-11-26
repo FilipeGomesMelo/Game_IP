@@ -23,7 +23,7 @@ class projectile(object):
         self.WINDOW_HEIGHT = WINDOW_HEIGHT
 
         # vetor velocidade da bala
-        self.vel = 1
+        self.vel = 0.8
 
         # sprite da bala
         self.img = pg.image.load('images/bullet.png')

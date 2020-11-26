@@ -1,5 +1,7 @@
 import pygame as pg
 import player as pl
+import mapa as mp
+
 
 # initialize Pygame
 pg.init()
@@ -10,27 +12,32 @@ WINDOW_HEIGHT = 672
 
 # setup da tela
 win = pg.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
-pg.display.set_caption("Wild Wild West")
+pg.display.set_caption("Unitled wizard game")
 
 # setup icone da tela
-icon = pg.image.load('images/cowboy.png')
+icon = pg.image.load('images/wizard.png')
 pg.display.set_icon(icon)
+
 
 # cria o jogador no centro da tela
 king = pl.player(WINDOW_WIDTH//2, WINDOW_HEIGHT//2, 32, 32, win, WINDOW_WIDTH, WINDOW_HEIGHT)
+
+mapa = mp.mapa(0, 0, win)
 
 # runs the game
 def main():
     global king
     ticks_last_frame = 0
+    # mude para true para ver o fps
+    show_fps = False
+    if show_fps:
+        font = pg.font.Font(None, 30)
+        clock = pg.time.Clock()
     while True:
         # permite fechar a janela
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 pg.quit()
-            if event.type == pg.KEYDOWN:
-                if event.key == pg.K_m:
-                    Rect.move_ip(10, 0)
         # fechar a janela apretando esc
         if pg.key.get_pressed()[pg.K_ESCAPE]:
             pg.quit()
@@ -43,14 +50,25 @@ def main():
         king.update(dt)
         # desenha tudo 
         draw_all() 
+
+        # mostra o fps do jogo
+        if show_fps:
+            fps = font.render(str(int(clock.get_fps())), True, pg.Color('White'))
+            win.blit(fps, (50,50))
+            pg.display.flip()
+            clock.tick(60)
+
         # update diplay
         pg.display.update()
 
 #  desenha o jogador
 def draw_all():
-    # preenche o fundo
-    win.fill((242,188,82))
-
+    # preenche o fundo com cor sólida, não é mais necessário fora debuging
+    # win.fill((242,188,82))
+    
+    # desenha o mapa
+    mapa.draw()
+    
     # desenha o jogador e as suas balas 
     king.draw()
 
