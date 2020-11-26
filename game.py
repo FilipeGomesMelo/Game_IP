@@ -12,7 +12,7 @@ WINDOW_HEIGHT = 672
 
 # setup da tela
 win = pg.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
-pg.display.set_caption("Unitled wizard game")
+pg.display.set_caption("Unitled Wizard Game")
 
 # setup icone da tela
 icon = pg.image.load('images/wizard.png')
@@ -29,7 +29,7 @@ def main():
     global king
     ticks_last_frame = 0
     # mude para true para ver o fps
-    show_fps = False
+    show_fps = True
     if show_fps:
         font = pg.font.Font(None, 30)
         clock = pg.time.Clock()
@@ -47,7 +47,8 @@ def main():
         dt = (t - ticks_last_frame)
         ticks_last_frame = t
         # update o jogador e as balas
-        king.update(dt)
+        king.update(dt, mapa)
+
         # desenha tudo 
         draw_all() 
 

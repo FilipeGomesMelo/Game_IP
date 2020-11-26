@@ -47,9 +47,32 @@ class player(object):
         self.mouseX = self.x
         self.mouseY = self.y
 
+    def check_colision_left(self, mapa):
+        if mapa.tiles[mapa.map[int((self.x)//32)%21][int(self.y//32)%21]]['type'] != 'chao' or mapa.tiles[mapa.map[int((self.x)//32)%21][int((self.y+self.height)//32)%21]]['type'] != 'chao':
+            return True
+        else:
+            return False
+
+    def check_colision_right(self, mapa):
+        if mapa.tiles[mapa.map[int((self.x+self.width)//32)%21][int(self.y//32)%21]]['type'] != 'chao' or mapa.tiles[mapa.map[int((self.x+self.width)//32)%21][int((self.y+self.height)//32)%21]]['type'] != 'chao':
+            return True
+        else:
+            return False
+    
+    def check_colision_up(self, mapa):
+        if mapa.tiles[mapa.map[int((self.x)//32)%21][int(self.y//32)%21]]['type'] != 'chao' or mapa.tiles[mapa.map[int((self.x+self.width)//32)%21][int((self.y)//32)%21]]['type'] != 'chao':
+            return True
+        else:
+            return False
+    
+    def check_colision_down(self, mapa):
+        if mapa.tiles[mapa.map[int((self.x)//32)%21][int((self.y+self.height)//32)%21]]['type'] != 'chao' or mapa.tiles[mapa.map[int((self.x+self.width)//32)%21][int((self.y+self.height)//32)%21]]['type'] != 'chao':
+            return True
+        else:
+            return False
 
     # responsavel por calcular e controlar o movimento do jogador
-    def calculate_speed(self, keys):
+    def calculate_speed(self, keys, mapa):
         speedX = 0
         speedY = 0
 
@@ -76,24 +99,19 @@ class player(object):
             speedY = self.vel
         elif keys[pg.K_w]:
             speedY = -self.vel
-        
+
         # garante que o jogador não sai dos limites da tela jogavel    
-        if (self.x <= 0 and speedX < 0):
+        if speedX < 0 and (self.x <= 0 or self.check_colision_left(mapa)):
             speedX = 0
-            self.x = 0
-        elif (self.x >= self.WINDOW_WIDTH-self.width and speedX > 0):
+        elif ((self.x >= self.WINDOW_WIDTH-self.width or self.check_colision_right(mapa)) and speedX > 0):
             speedX = 0
-            self.x = self.WINDOW_WIDTH-self.width
-        if (self.y <= 0 and speedY < 0):
+        if ((self.y <= 0 or self.check_colision_up(mapa)) and speedY < 0):
             speedY = 0
-            self.y = 0
-        elif (self.y >= self.WINDOW_HEIGHT-self.height and speedY > 0):
+        elif ((self.y >= self.WINDOW_HEIGHT-self.height or self.check_colision_down(mapa)) and speedY > 0):
             speedY = 0
-            self.y = self.WINDOW_HEIGHT-self.height
-        
         # retorna as velocidades do jogador no eixo X e Y para calcular a sua nova posição
         return speedX, speedY
-    
+
     # controla a mira e gera novas balas
     def new_bullets(self, keys):
         # esse vetor corresponde as direções de todas as balas que vamos criar
@@ -204,22 +222,22 @@ class player(object):
         self.add_bullets(direction)
                 
         # deleta as balas que sairam da tela
-        self.del_bullets()
+        # self.del_bullets()
     
 
     # adiciona as balas nas direções selecionadas
     def add_bullets(self, direction):
         for i in direction:
             self.bullets.append(proj.projectile(self.x+self.width/2, self.y+self.height/2, 10, 10, self.win, self.WINDOW_WIDTH, self.WINDOW_HEIGHT, i))
-    
+    '''
     # deleta todas as balas que não estão mais na tela
     def del_bullets(self):
         for bullet in self.bullets:
             if not(0 < bullet.x < self.WINDOW_WIDTH and 0 < bullet.y < self.WINDOW_HEIGHT):
-                self.bullets.pop(self.bullets.index(bullet))
+                self.bullets.pop(self.bullets.index(bullet))'''
 
     # controla o movimento do jogador
-    def control(self, dt):
+    def control(self, dt, mapa):
         # teclas precionadas
         keys = pg.key.get_pressed()   
 
@@ -230,11 +248,21 @@ class player(object):
             self.shot_cooldown = self.shot_cooldown_normal
         
         # chama calculate_speed para calcular as velocidades x e y do jogador
-        speedX, speedY = self.calculate_speed(keys)
+        speedX, speedY = self.calculate_speed(keys, mapa)
 
-        # move o jogador    
+        # move o jogador   
         self.x += speedX*dt
         self.y += speedY*dt
+
+        # garante que o jogador não sai dos limites da tela jogavel    
+        if (self.x <= 0 and speedX < 0):
+            self.x = 0
+        elif (self.x >= self.WINDOW_WIDTH-self.width and speedX > 0):
+            self.x = self.WINDOW_WIDTH-self.width
+        if (self.y <= 0 and speedY < 0):
+            self.y = 0
+        elif (self.y >= self.WINDOW_HEIGHT-self.height and speedY > 0):
+            self.y = self.WINDOW_HEIGHT-self.height 
 
         # chama a função responsavel por fazer os tiros do jogador
         self.new_bullets(keys)
@@ -246,7 +274,10 @@ class player(object):
         self.win.blit(self.img, (self.x, self.y))
 
     # updata o jogador e as balas
-    def update(self, dt):
-        self.control(dt) 
+    def update(self, dt, mapa):
+        self.control(dt, mapa) 
         for bullet in self.bullets:
-            bullet.update(dt)
+            if bullet.existe:
+                bullet.update(dt, mapa)
+            else:
+                self.bullets.pop(self.bullets.index(bullet))
