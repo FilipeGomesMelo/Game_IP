@@ -38,7 +38,7 @@ class projectile(object):
     
     def update(self, dt, mapa):
         # para permitir criar balas em novos angulos que não fazem parte do dicionário
-        if self.direction not in self.angles:
+        if not(self.direction in self.angles):
             angle = self.direction*math.pi/180
             # adiciona esse novo angulo ao dicionario para só chamar math.sin e math.cos uma vez por nova bala
             self.angles[self.direction] = [round(math.sin(angle),3), round(math.cos(angle),3)]
