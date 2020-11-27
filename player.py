@@ -288,5 +288,5 @@ class player(object):
         for bullet in self.bullets:
             if bullet.existe:
                 bullet.update(dt, mapa)
-            else:
+            if not(bullet.existe):
                 self.bullets.pop(self.bullets.index(bullet))
