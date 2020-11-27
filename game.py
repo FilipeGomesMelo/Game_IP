@@ -98,7 +98,7 @@ def main():
         pg.display.update()
 
 
-#  desenha o jogadors
+#  desenha tudo
 def draw_all():
     # desenha o mapa
     mapa.draw()

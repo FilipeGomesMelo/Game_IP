@@ -50,7 +50,7 @@ class projectile(object):
         angle = self.direction*math.pi/180
         # calcula a velocidade x e y com base nos senos e cosenos (eixo y é invertido no pygame, multiplicamos por -1)
         speedX = self.vel*round(math.cos(angle),3)*dt
-        speedY = self.vel*round(math.sin(angle),3)*dt
+        speedY = -self.vel*round(math.sin(angle),3)*dt
 
 
         # calcula a nova posição da bala   

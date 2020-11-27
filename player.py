@@ -181,7 +181,7 @@ class player(object):
                     dy = (self.mouseY-5) - (self.y+self.height/2)
 
                     # calcula o angulo em graus
-                    rads = atan2(dy, dx)
+                    rads = atan2(-dy, dx)
                     rads %= 2*pi
                     degs = round(degrees(rads))
 

@@ -98,8 +98,3 @@ class inimigo(object):
         speedY = self.vel * round(math.sin(rads), 3)
 
         self.maior_movimento_valido(dt, mapa, speedX, speedY)
-
-        # self.x += speedx
-        # self.y += speedy
-
-    # def baleado(self):
