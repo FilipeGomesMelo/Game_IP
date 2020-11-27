@@ -35,7 +35,7 @@ class player(object):
         self.WINDOW_HEIGHT = WINDOW_HEIGHT
 
         # sprites do jogador
-        self.img = pg.image.load('images/cowboy_idle.png')
+        self.img = pg.transform.scale(pg.image.load('images/cowboy_idle.png'), (32,32))
 
         # lista de objetos projectile (balas)
         self.bullets = []
@@ -137,12 +137,11 @@ class player(object):
                 # atirar utilizando o mouse enquanto wheel esta ativa
                 if pg.mouse.get_pressed()[0]:
                     self.mouseX, self.mouseY = pg.mouse.get_pos()
-                    dx = (self.x+self.width/2) - (self.mouseX-5)
-                    dy = (self.y+self.height/2) - (self.mouseY-5)
-                    rads = atan2(dy,-dx)
+                    dx = (self.mouseX-5) - (self.x+self.width/2)
+                    dy = (self.mouseY-5) - (self.y+self.height/2)
+                    rads = atan2(dy,dx)
                     rads %= 2*pi
                     degs = round(degrees(rads), 3)
-                    direction.append(degs)
                     for i in range(0,360, 45):
                         direction.append((degs+i)%360)
                     self.ticks_last_shot = t
@@ -182,7 +181,7 @@ class player(object):
                     dy = (self.mouseY-5) - (self.y+self.height/2)
 
                     # calcula o angulo em graus
-                    rads = atan2(-dy, dx)
+                    rads = atan2(dy, dx)
                     rads %= 2*pi
                     degs = round(degrees(rads))
 
@@ -208,8 +207,7 @@ class player(object):
         for i in direction:
             self.bullets.append(proj.projectile(self.x+self.width/2, self.y+self.height/2, 12, 12, self.win, self.WINDOW_WIDTH, self.WINDOW_HEIGHT, i))
 
-    def maior_movimento_válido(self, dt, mapa, speedX, speedY):
-
+    def maior_movimento_valido(self, dt, mapa, speedX, speedY):
         # a representa a diferença entre o tamanho real do sprite do jogador e da "hitbox" com o mapa
         # isso serve para cirar uma janela de px maior para passar por espaços pequenos de um tile
         a = 3
@@ -277,7 +275,7 @@ class player(object):
         # chama calculate_speed para calcular as velocidades x e y do jogador
         speedX, speedY = self.calculate_speed(keys, mapa)
 
-        self.maior_movimento_válido(dt, mapa, speedX, speedY)
+        self.maior_movimento_valido(dt, mapa, speedX, speedY)
 
         # garante que o jogador não sai dos limites da tela jogavel    
         if (self.x <= 0 and speedX < 0):

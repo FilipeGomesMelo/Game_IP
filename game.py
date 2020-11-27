@@ -33,15 +33,13 @@ king = pl.player(WINDOW_WIDTH // 2, WINDOW_HEIGHT // 2, 32, 32, win, WINDOW_WIDT
 # cria o mapa
 mapa = mp.mapa(0, 0, win)
 
-#criando inimigos
+# cria lista que vai guardar todos inimigos
 zombies = []
-zombies.append(ini.inimigo(0, WINDOW_HEIGHT // 2, 32, 32, win, WINDOW_WIDTH, WINDOW_HEIGHT))
 
 
 
-# runs the games
+# roda o jogo
 def main():
-    global king
     ticks_last_frame = 0
     ticks_last_enemy = 0
 
@@ -66,7 +64,7 @@ def main():
         dt = (t - ticks_last_frame)
         ticks_last_frame = t
 
-        #timespanw inimigo
+        # responsavel por spawnar os inimigos
         dt_enemy = t - ticks_last_enemy
         if dt_enemy > 1000:
             zombies.append(ini.inimigo(0, WINDOW_HEIGHT // 2, 32, 32, win, WINDOW_WIDTH, WINDOW_HEIGHT))
@@ -75,9 +73,16 @@ def main():
         # update o jogador e as balas
         king.update(dt, mapa)
 
-        #update do inimigo
+        for bullet in king.bullets:
+            killed = bullet.check_enemy(zombies)
+            if killed != -1:
+                zombies.pop(zombies.index(killed))
+        
+        # king.check_enemy(zombies)
+                
+        # update do inimigo
         for zombie in zombies:
-            zombie.update(king.x, king.y, dt)
+            zombie.update(king.x, king.y, dt, mapa)
 
         # desenha tudo 
         draw_all()
@@ -93,17 +98,17 @@ def main():
         pg.display.update()
 
 
-#  desenha o jogador
+#  desenha o jogadors
 def draw_all():
     # desenha o mapa
     mapa.draw()
 
-    # desenha o jogador e as suas balas 
-    king.draw()
-
-    #desenhar inimigo
+    #desenhar inimigos
     for zombie in zombies:
         zombie.draw()
+
+    # desenha o jogador e as suas balas 
+    king.draw()
 
     # faz update da tela
     pg.display.update()
