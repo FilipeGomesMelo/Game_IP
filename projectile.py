@@ -26,10 +26,10 @@ class projectile(object):
         self.WINDOW_HEIGHT = WINDOW_HEIGHT
 
         # vetor velocidade da bala
-        self.vel = 0.8
+        self.vel = 0.5
 
         # sprite da bala
-        self.img = pg.transform.scale(pg.image.load('images/bullet2x.png'), (self.width,self.height))
+        self.img = pg.transform.scale(pg.image.load('images/bullet2.png'), (self.width,self.height))
 
         # direção é a chave para os sen e cos dessa bala
         self.direction = direction

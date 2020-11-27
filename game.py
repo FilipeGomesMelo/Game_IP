@@ -20,7 +20,7 @@ pg.display.set_icon(icon)
 
 
 # cria o jogador no centro da tela
-king = pl.player(WINDOW_WIDTH//2, WINDOW_HEIGHT//2, 30, 30, win, WINDOW_WIDTH, WINDOW_HEIGHT)
+king = pl.player(WINDOW_WIDTH//2, WINDOW_HEIGHT//2, 32, 32, win, WINDOW_WIDTH, WINDOW_HEIGHT)
 
 mapa = mp.mapa(0, 0, win)
 
