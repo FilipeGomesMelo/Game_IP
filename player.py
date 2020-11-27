@@ -47,6 +47,8 @@ class player(object):
         self.mouseX = self.x
         self.mouseY = self.y
 
+        # O plano é usar isso para poder facilitar a detecção de colisão, uma série de tuplas
+        # que vai ser atualizada todo update
         self.corners = ((self.x, self.y), (self.x+self.width,self.y), (self.x,self.y+self.height), (self.x+self.width,self.y+self.height))
 
 
@@ -221,10 +223,45 @@ class player(object):
         speedX, speedY = self.calculate_speed(keys, mapa)
 
         # move o jogador somente se a posição final for em um bloco tipo 'chão'
+        # basicamente, se eu for me mover para uma posição e essa posição não for válida, eu tento dnv com um px a menos
+        # até encontrar uma posição em que eu possa me mover
         if mapa.tiles[mapa.map[int((self.y)//32)%21][int((self.x+speedX*dt)//32)%21]]['type'] == 'chao' and mapa.tiles[mapa.map[int((self.y)//32)%21][int((self.x+self.width+speedX*dt)//32)%21]]['type'] == 'chao' and mapa.tiles[mapa.map[int((self.y+self.height)//32)%21][int((self.x+speedX*dt)//32)%21]]['type'] == 'chao' and mapa.tiles[mapa.map[int((self.y+self.height)//32)%21][int((self.x+self.width+speedX*dt)//32)%21]]['type'] == 'chao':
-            self.x += speedX*dt        
+            self.x += speedX*dt
+        else:
+            # se a soma da posição velocidade for um tile que o jogador não deveria conseguir entrar, então
+            # esses loops vão procurar o maior movimeno possível na direção dada pela velocidade
+            if speedX < 0:
+                x = self.x + speedX*dt
+                while(x < self.x):
+                    if mapa.tiles[mapa.map[int((self.y)//32)%21][int((x)//32)%21]]['type'] == 'chao' and mapa.tiles[mapa.map[int((self.y+self.height)//32)%21][int((x)//32)%21]]['type'] == 'chao':
+                        self.x = x
+                        break
+                    x+=1
+            if speedX > 0:
+                x = self.x + speedX*dt
+                while(self.x < x):
+                    if mapa.tiles[mapa.map[int((self.y)//32)%21][int((x+self.width)//32)%21]]['type'] == 'chao' and mapa.tiles[mapa.map[int((self.y+self.height)//32)%21][int((x+self.width)//32)%21]]['type'] == 'chao':
+                        self.x = x
+                        break
+                    x-=1
         if mapa.tiles[mapa.map[int((self.y+speedY*dt)//32)%21][int((self.x)//32)%21]]['type'] == 'chao' and mapa.tiles[mapa.map[int((self.y+speedY*dt)//32)%21][int((self.x+self.width)//32)%21]]['type'] == 'chao' and mapa.tiles[mapa.map[int((self.y+self.height+speedY*dt)//32)%21][int((self.x)//32)%21]]['type'] == 'chao' and mapa.tiles[mapa.map[int((self.y+speedY*dt+self.height)//32)%21][int((self.x+self.width)//32)%21]]['type'] == 'chao':
             self.y += speedY*dt
+        else:
+            # Mesma coisa que foi feita com a velocidade y
+            if speedY < 0:
+                y = self.y + speedY*dt
+                while(y < self.y):
+                    if mapa.tiles[mapa.map[int((y)//32)%21][int((self.x)//32)%21]]['type'] == 'chao' and mapa.tiles[mapa.map[int((y)//32)%21][int((self.x+self.width)//32)%21]]['type'] == 'chao':
+                        self.y = y
+                        break
+                    y += 1
+            if speedY > 0:
+                y = self.y + speedY*dt
+                while(y > self.y):
+                    if mapa.tiles[mapa.map[int((y+self.height)//32)%21][int((self.x)//32)%21]]['type'] == 'chao' and mapa.tiles[mapa.map[int((y+self.height)//32)%21][int((self.x+self.width)//32)%21]]['type'] == 'chao':
+                        self.y = y
+                        break
+                    y -= 1
 
         # garante que o jogador não sai dos limites da tela jogavel    
         if (self.x <= 0 and speedX < 0):
