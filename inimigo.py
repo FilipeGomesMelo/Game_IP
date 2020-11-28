@@ -83,17 +83,12 @@ class inimigo(object):
                     y -= 1
 
     def update(self, x, y, dt, mapa):
-        # if self.x < x:
-        #     self.x += self.vel * dt
-        # else:
-        #     self.x -= self.vel * dt
-
         dx = x - self.x
         dy = y - self.y
 
         rads = atan2(dy, dx)
         rads %= 2 * pi
-
+        
         speedX = self.vel * round(math.cos(rads), 3)
         speedY = self.vel * round(math.sin(rads), 3)
 

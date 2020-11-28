@@ -37,7 +37,6 @@ mapa = mp.mapa(0, 0, win)
 zombies = []
 
 
-
 # roda o jogo
 def main():
     ticks_last_frame = 0
@@ -84,6 +83,8 @@ def main():
         for zombie in zombies:
             zombie.update(king.x, king.y, dt, mapa)
 
+        king.check_enemy(zombies, t)
+
         # desenha tudo 
         draw_all()
 
@@ -112,6 +113,5 @@ def draw_all():
 
     # faz update da tela
     pg.display.update()
-
 
 main()

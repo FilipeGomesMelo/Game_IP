@@ -47,10 +47,36 @@ class player(object):
         self.mouseX = self.x
         self.mouseY = self.y
 
-        # O plano é usar isso para poder facilitar a detecção de colisão, uma série de tuplas
-        # que vai ser atualizada todo update
-        self.corners = ((self.x, self.y), (self.x+self.width,self.y), (self.x,self.y+self.height), (self.x+self.width,self.y+self.height))
+        self.i_frames = False
+        self.i_frames_duration = 1000
+        self.ticks_last_hit = 0
 
+        self.blink = 0
+
+    # checa se o jogador está tocando um inimigo
+    def check_enemy(self, enemies, t):
+
+        # quatro cantos do jogador
+        corners = [[self.x, self.y], [self.x+self.width, self.y], [self.x, self.y+self.height], [self.x+self.width, self.y+self.height]]
+        # se o jogador não estiver invulnerável, vemos se o jogador está tocando em um inimigo
+        if not self.i_frames:
+            for enemy in enemies:
+                for corner in corners:
+                    if enemy.x+1 <= corner[0] <= enemy.x + enemy.width and enemy.y <= corner[1] <= enemy.y + enemy.height:
+                        # reseta blink
+                        self.blink = 0
+                        # ativa frames de invulnerável
+                        self.i_frames = True
+                        # salva os ticks no momento do hit
+                        self.ticks_last_hit = t
+                        # interrompe a função
+                        return
+        # se já se passou o tempo de duração dos frames de invulnerabilidade, desative a invunerabilidade
+        elif t - self.ticks_last_hit > self.i_frames_duration:
+            self.i_frames = False
+
+
+                
 
     # responsavel por calcular e controlar o movimento do jogador
     def calculate_speed(self, keys, mapa):
@@ -139,7 +165,7 @@ class player(object):
                     self.mouseX, self.mouseY = pg.mouse.get_pos()
                     dx = (self.mouseX-5) - (self.x+self.width/2)
                     dy = (self.mouseY-5) - (self.y+self.height/2)
-                    rads = atan2(dy,dx)
+                    rads = atan2(-dy,dx)
                     rads %= 2*pi
                     degs = round(degrees(rads), 3)
                     for i in range(0,360, 45):
@@ -294,7 +320,17 @@ class player(object):
     def draw(self):
         for bullet in self.bullets:
             bullet.draw()
-        self.win.blit(self.img, (self.x, self.y))
+        # se o jogador estiver invulnerável, ele ficara "piscando", sendo desenhado frame sim e frame não     
+        if self.i_frames:
+            # só printa nos frames pares desde o frame em que o jogador levou o dano
+            if self.blink % 2 == 0:
+                self.blink += 1
+                self.win.blit(self.img, (self.x, self.y))
+            else:
+                self.blink += 1
+        # caso contrário, desenhe o jogador normalmente        
+        else:
+            self.win.blit(self.img, (self.x, self.y))
 
     # updata o jogador e as balas
     def update(self, dt, mapa):

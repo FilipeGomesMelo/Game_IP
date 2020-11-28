@@ -35,11 +35,12 @@ class projectile(object):
         self.direction = direction
         # angles é um dicionario com os senos e cosenos de cada angulo de 0 a 365 de 5 em 5
         self.angles = {}
+
     def check_enemy(self, enemies):
         corners = [[self.x, self.y], [self.x+self.width, self.y], [self.x, self.y+self.height], [self.x+self.width, self.y+self.height]]
         for enemy in enemies:
             for corner in corners:
-                if enemy.x+1 < corner[0] < enemy.x + enemy.width and enemy.y < corner[1] < enemy.y + enemy.height:
+                if enemy.x+1 <= corner[0] <= enemy.x + enemy.width and enemy.y <= corner[1] <= enemy.y + enemy.height:
                     self.existe = False
                     return enemy
         return -1
