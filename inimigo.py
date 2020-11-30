@@ -23,7 +23,7 @@ class inimigo(object):
 
         self.img = pygame.transform.scale(pygame.image.load('images/inimigo.png'), (self.width, self.height))
 
-        self.vel = 0.15
+        self.vel = 0.10
 
     def draw(self):
         self.win.blit(self.img, (self.x, self.y))

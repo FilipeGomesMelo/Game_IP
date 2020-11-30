@@ -53,6 +53,10 @@ class player(object):
 
         self.blink = 0
 
+        self.projectile_hit_wall = pg.mixer.Sound("sounds/projectile_wall.wav")
+
+        self.health = 3
+
     # checa se o jogador está tocando um inimigo
     def check_enemy(self, enemies, t):
 
@@ -69,8 +73,11 @@ class player(object):
                         self.i_frames = True
                         # salva os ticks no momento do hit
                         self.ticks_last_hit = t
+                        # takes damage
+                        self.health -= 1
+                        print(self.health)
                         # interrompe a função
-                        return
+                        return True
         # se já se passou o tempo de duração dos frames de invulnerabilidade, desative a invunerabilidade
         elif t - self.ticks_last_hit > self.i_frames_duration:
             self.i_frames = False
@@ -303,16 +310,6 @@ class player(object):
 
         self.maior_movimento_valido(dt, mapa, speedX, speedY)
 
-        # garante que o jogador não sai dos limites da tela jogavel    
-        if (self.x <= 0 and speedX < 0):
-            self.x = 0
-        elif (self.x >= self.WINDOW_WIDTH-self.width and speedX > 0):
-            self.x = self.WINDOW_WIDTH-self.width
-        if (self.y <= 0 and speedY < 0):
-            self.y = 0
-        elif (self.y >= self.WINDOW_HEIGHT-self.height and speedY > 0):
-            self.y = self.WINDOW_HEIGHT-self.height
-
         # chama a função responsavel por fazer os tiros do jogador
         self.new_bullets(keys)
 
@@ -322,7 +319,7 @@ class player(object):
             bullet.draw()
         # se o jogador estiver invulnerável, ele ficara "piscando", sendo desenhado frame sim e frame não     
         if self.i_frames:
-            # só printa nos frames pares desde o frame em que o jogador levou o dano
+            # só desenha nos frames pares desde o frame em que o jogador levou o dano
             if self.blink % 2 == 0:
                 self.blink += 1
                 self.win.blit(self.img, (self.x, self.y))
@@ -339,4 +336,5 @@ class player(object):
             if bullet.existe:
                 bullet.update(dt, mapa)
             if not(bullet.existe):
+                self.projectile_hit_wall.play()
                 self.bullets.pop(self.bullets.index(bullet))

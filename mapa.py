@@ -7,6 +7,7 @@ pg.init()
 #   Classe de Mapa provisório                                                    #
 #   Essa classe assume que você está trabalhando com uma tela jogável de 672x672 #
 ##################################################################################
+
 class mapa(object):
     def __init__(self, x, y, window):
         # cordenadas do mapa
