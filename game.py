@@ -31,7 +31,7 @@ pg.display.set_icon(icon)
 king = pl.player(WINDOW_WIDTH // 2, WINDOW_HEIGHT // 2, 32, 32, win, WINDOW_WIDTH, WINDOW_HEIGHT)
 
 # cria o mapa
-mapa = mp.mapa(0, 0, win)
+mapa = mp.mapa(0, 0, win, 'mapa2')
 
 # cria lista que vai guardar todos inimigos
 zombies = []
