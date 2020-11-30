@@ -91,28 +91,16 @@ class player(object):
         speedY = 0
 
         # o jogador pode se mover em 8 direções ao todo, cima, baixo, esquerda, direita e as diagonais correspondentes
-        if keys[pg.K_a]:
-            if keys[pg.K_w]:
-                speedX = -self.d_vel
-                speedY = -self.d_vel
-            elif keys[pg.K_s]:
-                speedX = -self.d_vel
-                speedY = self.d_vel
-            else:
-                speedX = -self.vel
-        elif keys[pg.K_d]:
-            if keys[pg.K_w]:
-                speedX = self.d_vel
-                speedY = -self.d_vel
-            elif keys[pg.K_s]:
-                speedX = self.d_vel
-                speedY = self.d_vel
-            else:
-                speedX = self.vel
-        elif keys[pg.K_s]:
-            speedY = self.vel
-        elif keys[pg.K_w]:
-            speedY = -self.vel
+        x = (keys[pg.K_d] - keys[pg.K_a])
+        y = (keys[pg.K_s] - keys[pg.K_w])
+
+        # calcula a velocidade baseado nas teclas precionadas
+        if x != 0 and y != 0:
+            speedX = x*self.d_vel
+            speedY = y*self.d_vel
+        else:
+            speedX = x*self.vel
+            speedY = y*self.vel
 
         # garante que o jogador não sai dos limites da tela jogavel
         if speedX < 0 and self.x <= 0:
