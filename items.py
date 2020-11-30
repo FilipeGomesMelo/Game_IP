@@ -3,13 +3,22 @@ import pygame as pg
 # initialize Pygame
 pg.init()
 
+#####################
+#  Classe de itens  #
+#####################
 class item(object):
     def __init__(self, x, y, window, rand, t):
+        # quantidade de ticks no momento em que o item foi criado
         self.t = t
+
+        # coordenadas do item
         self.x = x
         self.y = y
+
+        # janela do item
         self.win = window
 
+        # seleciona o item com um número aleatório 
         if 0 <= rand < 20:
             self.type = 'coin'
             self.width = 18
@@ -39,6 +48,7 @@ class item(object):
             self.width = 32
             self.height = 32
 
+        # imformações dos itens
         self.img = {'coin': pg.transform.scale(pg.image.load('images/coin.png'), (18,18)),
                     'S_coin': pg.transform.scale(pg.image.load('images/coin_special.png'), (18,18)),
                     'boots': pg.transform.scale(pg.image.load('images/boots.png'), (26,26)),
@@ -46,23 +56,34 @@ class item(object):
                     'multi_shot': pg.transform.scale(pg.image.load('images/multi_shot.png'), (32,32)),
                     'fast_shot': pg.transform.scale(pg.image.load('images/fast_shot.png'), (32,32)),
                     'clock': pg.transform.scale(pg.image.load('images/clock.png'), (32,32))}
+
+        # determina se o item existe ou não            
         self.existes = True
+
+        # tempo que o item vai existir antes de desaparecer
         self.duration = 5000
     
+    # detecta colisão com o jogador
     def player_colision(self, player):
+        # os quatro cantos da hitbox do item
         corners = [[self.x, self.y], [self.x+self.width, self.y], [self.x, self.y+self.height], [self.x+self.width, self.y+self.height]]
 
+        # checa se qualquer um dos quatro cantos está dentro do jogador
         for corner in corners:
             if player.x <= corner[0] <= player.x+player.width and player.y <= corner[1] <= player.y+player.height:
+                # destroi o item
                 self.existes = False
+                # e retorna o tipo de item que foi coletado
                 return self.type
         return -1
             
 
 
     def update(self, t):
+        # se o item existe a mais tempo do que deveria, destroi o item
         if t - self.t >= self.duration:
             self.existes = False
 
     def draw(self):
+        # desenha o item
         self.win.blit(self.img[self.type], (self.x, self.y))

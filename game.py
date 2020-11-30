@@ -42,8 +42,10 @@ mapa = mp.mapa(0, 0, win)
 # cria lista que vai guardar todos inimigos
 zombies = []
 
+# cria a lista que guarda todos os itens
 items = []
 
+# dicionário que salva a quantidade de cada itens coletados
 collected_itens = {'coin': 0,
                     'boots': 0,
                     'coffee': 0,
@@ -62,7 +64,8 @@ def main():
     if show_fps:
         font = pg.font.Font(None, 30)
         clock = pg.time.Clock()
-
+    
+    # loop infinito que roda o jogo
     while True:
         # permite fechar a janela
         for event in pg.event.get():
@@ -96,8 +99,10 @@ def main():
                 if 0 <= rand < 65:
                     items.append(it.item(killed.x, killed.y, win, rand, t))
 
+        # updates todos itens
         for item in items:
             item.update(t)
+            # checa por itens coletados e adiciona eles no dicionário
             col = item.player_colision(king)
             if col != -1 and col != 'S_coin':
                 collected_itens[col] += 1
@@ -119,13 +124,12 @@ def main():
                     king.shot_cooldown_normal = 300
             if item.existes == False:
                 items.pop(items.index(item))
-
-        # king.check_enemy(zombies)
                 
         # update do inimigo
         for zombie in zombies:
             zombie.update(king.x, king.y, dt, mapa)
 
+        # checa se algum inimigo está tocando o jogador e toca o som de dano
         if king.check_enemy(zombies, t):
             damage_sound.play()
 
@@ -152,6 +156,7 @@ def draw_all():
     for zombie in zombies:
         zombie.draw()
 
+    # desenha os itens
     for item in items:
         item.draw()
 
@@ -161,6 +166,7 @@ def draw_all():
     # faz update da tela
     pg.display.update()
 
+# reseta o jogo
 def reset_all():
     global king 
     king = pl.player(WINDOW_WIDTH // 2, WINDOW_HEIGHT // 2, 32, 32, win, WINDOW_WIDTH, WINDOW_HEIGHT)

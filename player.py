@@ -319,7 +319,10 @@ class player(object):
 
     # updata o jogador e as balas
     def update(self, dt, mapa):
+        # controla o jogdor
         self.control(dt, mapa) 
+        
+        # update nas balas e remove as balas que não existem
         for bullet in self.bullets:
             if bullet.existe:
                 bullet.update(dt, mapa)
