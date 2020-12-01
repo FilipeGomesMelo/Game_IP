@@ -127,17 +127,12 @@ class player(object):
         t = pg.time.get_ticks()
         dt_shot = (t - self.ticks_last_shot)   
         
-        # ativa o item atual
-        if keys[pg.K_SPACE] and self.current_item:
+        if keys[pg.K_SPACE] and self.current_item != None:
                 self.active_item[self.current_item] = t
                 self.current_item = None
 
         # se o tempo desde o ultimo tiro for maior que o cool down, o jogador pode atirar
         if dt_shot >= self.shot_cooldown:
-            if keys[pg.K_SPACE]:
-                self.active_item[self.current_item] = t
-                self.current_item = None
-
             # se a arma "wheel" estiver ativa, vamos gerar uma bala em todas as 8 direções principais
             if self.active_item['wheel'] != -1 and t - self.active_item['wheel'] < self.item_duration:
                 if keys[pg.K_LEFT] or keys[pg.K_RIGHT] or keys[pg.K_UP] or keys[pg.K_DOWN]:
