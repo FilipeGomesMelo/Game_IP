@@ -38,7 +38,7 @@ pg.display.set_icon(icon)
 king = pl.player(WINDOW_WIDTH // 2, WINDOW_HEIGHT // 2, 32, 32, win, WINDOW_WIDTH, WINDOW_HEIGHT)
 
 # cria o mapa
-mapa = mp.mapa(0, 0, win, 'mapa'+str(round(random()*10)%3+1))
+mapa = mp.mapa(0, 0, win, 'mapa1')
 
 # cria lista que vai guardar todos inimigos
 zombies = []
@@ -56,14 +56,17 @@ collected_itens = {'coin': 0,
 
 # roda o jogo
 def main():
+    game_state = 'start'
+
     ticks_last_frame = 0
     ticks_last_enemy = -2000
 
+    press_start = pg.transform.scale(pg.image.load('images/press_start.png'), (98*3,14*3))
 
     # mude para true para ver o fps
     show_fps = True
     if show_fps:
-        font = pg.font.Font(None, 30)
+        font = pg.font.Font(None, 20)
         clock = pg.time.Clock()
     
     # loop infinito que roda o jogo
@@ -76,81 +79,93 @@ def main():
         if pg.key.get_pressed()[pg.K_ESCAPE]:
             pg.quit()
 
-        # Calcula delta time, usado pra fazer o movimento continuo
-        t = pg.time.get_ticks()
-        dt = (t - ticks_last_frame)
-        ticks_last_frame = t
+        if pg.key.get_pressed()[pg.K_SPACE] and game_state == 'start':
+            ticks_last_enemy = pg.time.get_ticks()
+            game_state = 'play'
 
-        # responsavel por spawnar os inimigos
-        dt_enemy = t - ticks_last_enemy
-        if dt_enemy > 1000 and king.active_item['clock'] == -1:
-            zombies.append(ini.inimigo(0, WINDOW_HEIGHT // 2, 32, 32, win, WINDOW_WIDTH, WINDOW_HEIGHT))
-            ticks_last_enemy = t
+        if game_state == 'play':
+            # Calcula delta time, usado pra fazer o movimento continuo
+            t = pg.time.get_ticks()
+            dt = (t - ticks_last_frame)
+            ticks_last_frame = t
 
-        # update o jogador e as balas
-        king.update(dt, mapa)
-        if king.health <= 0:
-            reset_all()
-        for bullet in king.bullets:
-            killed = bullet.check_enemy(zombies)
-            if killed != -1:
-                enemy_death.play()
-                zombies.pop(zombies.index(killed))
-                rand = round((random()*1000)%200)
-                if 0 <= rand < 65:
-                    items.append(it.item(killed.x, killed.y, win, rand, t))
+            # responsavel por spawnar os inimigos
+            dt_enemy = t - ticks_last_enemy
+            if dt_enemy > 1000 and king.active_item['clock'] == -1:
+                zombies.append(ini.inimigo(0, WINDOW_HEIGHT // 2, 32, 32, win, WINDOW_WIDTH, WINDOW_HEIGHT))
+                ticks_last_enemy = t
 
-        # updates todos itens
-        for item in items:
-            item.update(t)
-            # checa por itens coletados e adiciona eles no dicionário
-            col = item.player_colision(king)
-            if col != -1 and col != 'S_coin':
-                collected_itens[col] += 1
-            if col == 'S_coin':
-                collected_itens['coin'] += 10
-            elif col == 'boots':
-                if king.vel <= 0.35:
-                    king.vel *= 1.05
-                    king.d_vel *= 1.05
-                if king.vel > 0.35:
-                    king.vel = 0.35
-                    king.d_vel = 0.35/(2**(1/2))
-            elif col == 'coffee':
-                if king.shot_cooldown_normal >= 300:
-                    king.shot_cooldown_normal *= 0.90
-                if king.shot_cooldown_normal < 300: 
-                    king.shot_cooldown_normal = 300
-            elif col in ['multi_shot', 'fast_shot', 'clock', 'wheel'] and king.current_item == None:
-                king.current_item = col
-            else:
-                king.active_item[col] = t
+            # update o jogador e as balas
+            king.update(dt, mapa)
+            if king.health <= 0:
+                game_state = 'start'
+                reset_all()
+            for bullet in king.bullets:
+                killed = bullet.check_enemy(zombies)
+                if killed != -1:
+                    enemy_death.play()
+                    zombies.pop(zombies.index(killed))
+                    rand = round((random()*1000)%200)
+                    if 0 <= rand < 65:
+                        items.append(it.item(killed.x, killed.y, win, rand, t))
+
+            # updates todos itens
+            for item in items:
+                item.update(t)
+                # checa por itens coletados e adiciona eles no dicionário
+                col = item.player_colision(king)
+                if col != -1 and col != 'S_coin':
+                    collected_itens[col] += 1
+                if col == 'S_coin':
+                    collected_itens['coin'] += 10
+                elif col == 'boots':
+                    if king.vel <= 0.35:
+                        king.vel *= 1.05
+                        king.d_vel *= 1.05
+                    if king.vel > 0.35:
+                        king.vel = 0.35
+                        king.d_vel = 0.35/(2**(1/2))
+                elif col == 'coffee':
+                    if king.shot_cooldown_normal >= 300:
+                        king.shot_cooldown_normal *= 0.90
+                    if king.shot_cooldown_normal < 300: 
+                        king.shot_cooldown_normal = 300
+                elif col in ['multi_shot', 'fast_shot', 'clock', 'wheel'] and king.current_item == None:
+                    king.current_item = col
+                else:
+                    king.active_item[col] = t
 
 
-            if item.existes == False:
-                items.pop(items.index(item))
-        print(king.current_item, collected_itens)        
-        # update do inimigo
-        for zombie in zombies:
-            if king.active_item['clock'] != -1 and t-king.active_item['clock'] < king.item_duration:
-                zombie.update(-1, -1, dt, mapa)
-            else:
-                zombie.update(king.x, king.y, dt, mapa)
+                if item.existes == False:
+                    items.pop(items.index(item))
+            print(king.current_item, collected_itens)        
+            # update do inimigo
+            for zombie in zombies:
+                if king.active_item['clock'] != -1 and t-king.active_item['clock'] < king.item_duration:
+                    zombie.update(-1, -1, dt, mapa)
+                else:
+                    zombie.update(king.x, king.y, dt, mapa)
 
-        if t-king.active_item['clock'] > king.item_duration:
-            king.active_item['clock'] = -1
+            if t-king.active_item['clock'] > king.item_duration:
+                king.active_item['clock'] = -1
 
-        # checa se algum inimigo está tocando o jogador e toca o som de dano
-        if king.check_enemy(zombies, t):
-            damage_sound.play()
+            # checa se algum inimigo está tocando o jogador e toca o som de dano
+            if king.check_enemy(zombies, t):
+                damage_sound.play()
 
         # desenha tudo 
         draw_all()
 
+        if game_state == 'start':
+            win.blit(press_start, (200, 200))
+
+
         # mostra o fps do jogo
         if show_fps:
-            fps = font.render(str(int(clock.get_fps())), True, pg.Color('White'))
+            fps = font.render(str(int(clock.get_fps())), True, pg.Color('Black'))
             win.blit(fps, (50, 50))
+            itens = font.render(str(collected_itens), True, pg.Color('Black'))
+            win.blit(itens, (50, 70))
             pg.display.flip()
             clock.tick(60)
 
@@ -177,8 +192,12 @@ def draw_all():
     # faz update da tela
     pg.display.update()
 
+i = 0
+
 # reseta o jogo
 def reset_all():
+    global i
+    i += 1
     global king 
     king = pl.player(WINDOW_WIDTH // 2, WINDOW_HEIGHT // 2, 32, 32, win, WINDOW_WIDTH, WINDOW_HEIGHT)
     global zombies
@@ -186,7 +205,7 @@ def reset_all():
     global items 
     items = []
     global mapa
-    mapa = mp.mapa(0, 0, win, 'mapa'+str(round(random()*10)%3+1))
+    mapa = mp.mapa(0, 0, win, 'mapa'+str(i%3+1))
     global collected_itens
     collected_itens = {'coin': 0,
                         'boots': 0,
