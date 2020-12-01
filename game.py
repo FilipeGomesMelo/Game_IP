@@ -154,11 +154,7 @@ def main():
                 damage_sound.play()
 
         # desenha tudo 
-        draw_all()
-
-        if game_state == 'start':
-            win.blit(press_start, (200, 200))
-
+        draw_all(game_state, press_start)
 
         # mostra o fps do jogo
         if show_fps:
@@ -174,7 +170,7 @@ def main():
 
 
 #  desenha tudo
-def draw_all():
+def draw_all(game_state, press_start):
     # desenha o mapa
     mapa.draw()
 
@@ -188,6 +184,9 @@ def draw_all():
 
     # desenha o jogador e as suas balas 
     king.draw()
+
+    if game_state == 'start':
+        win.blit(press_start, (200, 200))
 
     # faz update da tela
     pg.display.update()
@@ -213,5 +212,6 @@ def reset_all():
                         'multi_shot': 0,
                         'fast_shot': 0,
                         'clock': 0}
+
 
 main()
