@@ -83,13 +83,17 @@ class inimigo(object):
                     y -= 1
 
     def update(self, x, y, dt, mapa):
-        dx = x - self.x
-        dy = y - self.y
+        if x != -1 and y != -1:
+            dx = x - self.x
+            dy = y - self.y
 
-        rads = atan2(dy, dx)
-        rads %= 2 * pi
-        
-        speedX = self.vel * round(math.cos(rads), 3)
-        speedY = self.vel * round(math.sin(rads), 3)
+            rads = atan2(dy, dx)
+            rads %= 2 * pi
+            
+            speedX = self.vel * round(math.cos(rads), 3)
+            speedY = self.vel * round(math.sin(rads), 3)
+        else:
+            speedX = 0
+            speedY = 0
 
         self.maior_movimento_valido(dt, mapa, speedX, speedY)

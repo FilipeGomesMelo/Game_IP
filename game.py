@@ -82,7 +82,7 @@ def main():
 
         # responsavel por spawnar os inimigos
         dt_enemy = t - ticks_last_enemy
-        if dt_enemy > 1000:
+        if dt_enemy > 1000 and king.active_item['clock'] == -1:
             zombies.append(ini.inimigo(0, WINDOW_HEIGHT // 2, 32, 32, win, WINDOW_WIDTH, WINDOW_HEIGHT))
             ticks_last_enemy = t
 
@@ -122,12 +122,29 @@ def main():
                     king.shot_cooldown_normal *= 0.90
                 if king.shot_cooldown_normal < 300: 
                     king.shot_cooldown_normal = 300
+            # adiciona o item consumivel ao jogador ou usa se ele já tiver um item
+            elif col in ['multi_shot', 'fast_shot', 'clock', 'wheel']:
+                if king.current_item == None:
+                    king.current_item = col
+                else:
+                    king.active_item[col] = t
             if item.existes == False:
                 items.pop(items.index(item))
-                
+
+        # item atual do jogador
+        print(king.current_item)
+
         # update do inimigo
         for zombie in zombies:
-            zombie.update(king.x, king.y, dt, mapa)
+            # se o relogio estiver ativado não move os inimigos
+            if (king.active_item['clock']) != -1 and (t-king.active_item['clock'] < king.item_duration):
+                zombie.update(-1, -1, dt, mapa) 
+            else:
+                zombie.update(king.x, king.y, dt, mapa) 
+
+        # desativa o relogio
+        if t-king.active_item['clock'] > king.item_duration:
+            king.active_item['clock'] = -1
 
         # checa se algum inimigo está tocando o jogador e toca o som de dano
         if king.check_enemy(zombies, t):
