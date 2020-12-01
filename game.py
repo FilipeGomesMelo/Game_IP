@@ -53,7 +53,7 @@ collected_itens = {'coin': 0,
                     'multi_shot': 0,
                     'fast_shot': 0,
                     'clock': 0}
-
+pontuacao_anterior = []
 # roda o jogo
 def main():
     game_state = 'start'
@@ -92,7 +92,7 @@ def main():
             # responsavel por spawnar os inimigos
             dt_enemy = t - ticks_last_enemy
             if dt_enemy > 1000 and king.active_item['clock'] == -1:
-                zombies.append(ini.inimigo(0, WINDOW_HEIGHT // 2, 32, 32, win, WINDOW_WIDTH, WINDOW_HEIGHT))
+                zombies.append(ini.inimigo(0, WINDOW_HEIGHT // 2, 32, 32, win, WINDOW_WIDTH, WINDOW_HEIGHT, mapa))
                 ticks_last_enemy = t
 
             # update o jogador e as balas
@@ -138,7 +138,7 @@ def main():
 
                 if item.existes == False:
                     items.pop(items.index(item))
-            print(king.current_item, collected_itens)        
+            # print(king.current_item, collected_itens)
             # update do inimigo
             for zombie in zombies:
                 if king.active_item['clock'] != -1 and t-king.active_item['clock'] < king.item_duration:

@@ -1,16 +1,27 @@
 import pygame
 from math import atan2, degrees, pi
 import math
-
+from random import seed, random
+from datetime import datetime
 pygame.init()
 
 
 class inimigo(object):
 
-    def __init__(self, x, y, width, height, window, WINDOW_WIDTH, WINDOW_HEIGHT):
+    def __init__(self, x, y, width, height, window, WINDOW_WIDTH, WINDOW_HEIGHT,mapa):
+        seed(datetime.now())
+        cordenadas = []
+
+        #spawn dos inimigos
+        for i in range(len(mapa.map)):
+            for j in range(len(mapa.map)):
+                if mapa.tiles[mapa.map[j][i]]["type"] == "spawn":
+                    cordenadas.append([j*32, i*32])
+
         # posição x e y do jogador no mapa
-        self.x = x
-        self.y = y
+        posicao = cordenadas[round(random()*100)% len(cordenadas)]
+        self.x = posicao[1]
+        self.y = posicao[0]
 
         # largura e altura do jogador
         self.width = width
