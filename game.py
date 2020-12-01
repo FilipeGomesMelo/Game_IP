@@ -53,9 +53,21 @@ collected_itens = {'coin': 0,
                     'multi_shot': 0,
                     'fast_shot': 0,
                     'clock': 0}
-pontuacao_anterior = []
+
+pontuacao_anterior = {'coin': 0}
+pontuacao_total = []
+
+
+def texto(msg, cor):
+    font = pg.font.Font(None, 35)
+    texto1 = font.render(msg, True, cor)
+    win.blit(texto1, [220, 245])
+
+
 # roda o jogo
 def main():
+    global pontuacao_anterior
+
     game_state = 'start'
 
     ticks_last_frame = 0
@@ -98,6 +110,8 @@ def main():
             # update o jogador e as balas
             king.update(dt, mapa)
             if king.health <= 0:
+                pontuacao_total.append(collected_itens['coin'])
+                pontuacao_anterior = collected_itens
                 game_state = 'start'
                 reset_all()
             for bullet in king.bullets:
@@ -105,7 +119,7 @@ def main():
                 if killed != -1:
                     enemy_death.play()
                     zombies.pop(zombies.index(killed))
-                    rand = round((random()*1000)%200)
+                    rand = round((random()*1000)%65)
                     if 0 <= rand < 65:
                         items.append(it.item(killed.x, killed.y, win, rand, t))
 
@@ -186,17 +200,29 @@ def draw_all(game_state, press_start):
     king.draw()
 
     if game_state == 'start':
+        if i == 1:
+            texto(f"Pontuação total:{sum(pontuacao_total)}", (188, 51, 74))
+        else:
+            texto(f"Pontuação anterior:{pontuacao_anterior['coin']}", (188, 51, 74))
         win.blit(press_start, (200, 200))
 
     # faz update da tela
     pg.display.update()
 
-i = 0
+i = 1
 
 # reseta o jogo
 def reset_all():
+    global pontuacao_total
     global i
-    i += 1
+
+    if i == 3:
+        pontuacao_total = []
+        i = 1
+    else:
+        i += 1
+
+    print(i)
     global king 
     king = pl.player(WINDOW_WIDTH // 2, WINDOW_HEIGHT // 2, 32, 32, win, WINDOW_WIDTH, WINDOW_HEIGHT)
     global zombies
@@ -204,7 +230,7 @@ def reset_all():
     global items 
     items = []
     global mapa
-    mapa = mp.mapa(0, 0, win, 'mapa'+str(i%3+1))
+    mapa = mp.mapa(0, 0, win, 'mapa'+str(i))
     global collected_itens
     collected_itens = {'coin': 0,
                         'boots': 0,
