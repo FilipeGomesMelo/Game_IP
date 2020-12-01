@@ -4,10 +4,11 @@ import mapa as mp
 import inimigo as ini
 import items as it
 from random import seed, random
+from datetime import datetime
 
 # initialize Pygame
 pg.init()
-seed(random())
+seed(datetime.now())
 
 #Música_de_Fundo
 pg.mixer.init()
@@ -37,7 +38,7 @@ pg.display.set_icon(icon)
 king = pl.player(WINDOW_WIDTH // 2, WINDOW_HEIGHT // 2, 32, 32, win, WINDOW_WIDTH, WINDOW_HEIGHT)
 
 # cria o mapa
-mapa = mp.mapa(0, 0, win)
+mapa = mp.mapa(0, 0, win, 'mapa'+str(round(random()*10)%3+1))
 
 # cria lista que vai guardar todos inimigos
 zombies = []
@@ -95,7 +96,7 @@ def main():
             if killed != -1:
                 enemy_death.play()
                 zombies.pop(zombies.index(killed))
-                rand = round((random()*1000)%65)
+                rand = round((random()*1000)%200)
                 if 0 <= rand < 65:
                     items.append(it.item(killed.x, killed.y, win, rand, t))
 
@@ -128,7 +129,7 @@ def main():
 
             if item.existes == False:
                 items.pop(items.index(item))
-        print(king.current_item)        
+        print(king.current_item, collected_itens)        
         # update do inimigo
         for zombie in zombies:
             if king.active_item['clock'] != -1 and t-king.active_item['clock'] < king.item_duration:
@@ -151,7 +152,7 @@ def main():
             fps = font.render(str(int(clock.get_fps())), True, pg.Color('White'))
             win.blit(fps, (50, 50))
             pg.display.flip()
-            clock.tick(120)
+            clock.tick(60)
 
         # update diplay
         pg.display.update()
@@ -184,7 +185,8 @@ def reset_all():
     zombies = []
     global items 
     items = []
-
+    global mapa
+    mapa = mp.mapa(0, 0, win, 'mapa'+str(round(random()*10)%3+1))
     global collected_itens
     collected_itens = {'coin': 0,
                         'boots': 0,
