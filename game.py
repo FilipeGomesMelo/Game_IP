@@ -61,7 +61,7 @@ pontuacao_total = []
 def texto(msg, cor):
     font = pg.font.Font(None, 35)
     texto1 = font.render(msg, True, cor)
-    win.blit(texto1, [220, 245])
+    win.blit(texto1, (220, 245))
 
 
 # roda o jogo
@@ -119,7 +119,7 @@ def main():
                 if killed != -1:
                     enemy_death.play()
                     zombies.pop(zombies.index(killed))
-                    rand = round((random()*1000)%65)
+                    rand = round((random()*1000)%200)
                     if 0 <= rand < 65:
                         items.append(it.item(killed.x, killed.y, win, rand, t))
 
