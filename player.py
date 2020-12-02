@@ -55,7 +55,7 @@ class player(object):
 
         self.projectile_hit_wall = pg.mixer.Sound("sounds/projectile_wall.wav")
 
-        self.health = 1
+        self.health = 3
 
         self.current_item = None
 
