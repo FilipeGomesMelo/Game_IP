@@ -110,7 +110,6 @@ def main():
             # update o jogador e as balas
             king.update(dt, mapa)
             if king.health <= 0:
-                pontuacao_total.append(collected_itens['coin'])
                 pontuacao_anterior = collected_itens
                 game_state = 'start'
                 reset_all()
@@ -119,7 +118,7 @@ def main():
                 if killed != -1:
                     enemy_death.play()
                     zombies.pop(zombies.index(killed))
-                    rand = round((random()*1000)%200)
+                    rand = round((random()*1000)%64)
                     if 0 <= rand < 65:
                         items.append(it.item(killed.x, killed.y, win, rand, t))
 
@@ -215,9 +214,11 @@ i = 1
 def reset_all():
     global pontuacao_total
     global i
-
-    if i == 3:
+    global collected_itens
+    if i == 1:
         pontuacao_total = []
+    pontuacao_total.append(collected_itens['coin'])
+    if i == 3:
         i = 1
     else:
         i += 1
@@ -231,7 +232,6 @@ def reset_all():
     items = []
     global mapa
     mapa = mp.mapa(0, 0, win, 'mapa'+str(i))
-    global collected_itens
     collected_itens = {'coin': 0,
                         'boots': 0,
                         'coffee': 0,
