@@ -118,7 +118,7 @@ def main():
                 if killed != -1:
                     enemy_death.play()
                     zombies.pop(zombies.index(killed))
-                    rand = round((random()*1000)%64)
+                    rand = round((random()*1000)%200)
                     if 0 <= rand < 65:
                         items.append(it.item(killed.x, killed.y, win, rand, t))
 
