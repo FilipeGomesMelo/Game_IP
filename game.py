@@ -39,7 +39,7 @@ icon = pg.image.load('images/wizard.png')
 pg.display.set_icon(icon)
 
 # cria o jogador no centro da tela
-king = pl.player(WINDOW_WIDTH // 2, WINDOW_HEIGHT // 2, 32, 32, win, WINDOW_WIDTH, WINDOW_HEIGHT)
+king = pl.player((WINDOW_WIDTH // 2)-16, (WINDOW_HEIGHT // 2)-16, 32, 32, win, WINDOW_WIDTH, WINDOW_HEIGHT)
 
 # cria o mapa
 mapa = mp.mapa(0, 0, win, 'mapa1')
@@ -65,8 +65,8 @@ pontuacao_anterior = {'coin': 0}
 pontuacao_total = []
 
 # imagem dos corações
-heart_full = pg.transform.scale(pg.image.load('images/heart_full2.png'), (30,30))
-heart_empty = pg.transform.scale(pg.image.load('images/heart_empty2.png'), (30,30))
+heart_full = pg.transform.scale(pg.image.load('images/heart_full.png'), (30,30))
+heart_empty = pg.transform.scale(pg.image.load('images/heart_empty.png'), (30,30))
 
 # imagem da tela de começo de cada fase
 press_start = pg.transform.scale(pg.image.load('images/press_start.png'), (98*3,14*3))
@@ -117,13 +117,14 @@ def main():
             ticks_last_enemy = pg.time.get_ticks()
             game_state = 'play'
 
+        # Calcula delta time, usado pra fazer o movimento continuo
+        t = pg.time.get_ticks()
+        dt = (t - ticks_last_frame)
+        ticks_last_frame = t
+
         # roda a parte da gameplay
         if game_state == 'play':
             print(enemy_time)
-            # Calcula delta time, usado pra fazer o movimento continuo
-            t = pg.time.get_ticks()
-            dt = (t - ticks_last_frame)
-            ticks_last_frame = t
 
             # responsavel por spawnar os inimigos
             dt_enemy = t - ticks_last_enemy
@@ -155,7 +156,7 @@ def main():
                     # remove o inimigo da lista de inimigos
                     zombies.pop(zombies.index(killed))
                     # gera um número aleatório que vai determinar o item
-                    rand = round((random()*1000)%120)
+                    rand = round((random()*1000)%100)
                     # só nasce um item se o número aleatório estiver nesse intervalo
                     if 0 <= rand < 62:
                         # cria um novo item
@@ -245,6 +246,9 @@ itens_img = {'coin': pg.transform.scale(pg.image.load('images/coin.png'), (18,18
             'fast_shot': pg.transform.scale(pg.image.load('images/fast_shot.png'), (32,32)),
             'clock': pg.transform.scale(pg.image.load('images/clock.png'), (32,32))}
 
+# vamos usar i para passar de mapa por mapa
+i = 1
+
 #  desenha tudo
 def draw_all(game_state):
     # desenha o mapa
@@ -262,11 +266,11 @@ def draw_all(game_state):
     king.draw()
 
     # desenha os corações do jogador
-    for i in range(king.max_health):
-        if i < king.health:
-            win.blit(heart_full, ((40*i)+5,5))
+    for j in range(king.max_health):
+        if j < king.health:
+            win.blit(heart_full, ((40*j)+5,5))
         else:
-            win.blit(heart_empty, ((40*i)+5,5))
+            win.blit(heart_empty, ((40*j)+5,5))
 
     # desenha a caixa onde o item atual aparece
     win.blit(canvas, (620,5))
@@ -275,13 +279,21 @@ def draw_all(game_state):
     if(king.current_item != None):
         win.blit(itens_img[king.current_item], (628, 13))
 
+    global i
+    if i == 1:
+        color = (234, 222, 233)
+    elif i == 2:
+        color = (88, 29, 43)
+    elif i == 3:
+        color = (242, 188, 82)
+
     # desenho os itens coletaveis
-    win.blit(itens_img['coin'], (10, 40))
-    texto(f"x{collected_itens['coin']}", (88, 29, 43), 30, 40, 30)
-    win.blit(itens_img['coffee'], (10, 65))
-    texto(f"x{collected_itens['coffee']}", (88, 29, 43), 30, 69, 30)
-    win.blit(itens_img['boots'], (8.50, 100))
-    texto(f"x{collected_itens['boots']}", (88, 29, 43), 30, 104, 30)
+    win.blit(itens_img['coin'], (8, 40))
+    texto(f"x{collected_itens['coin']}", color, 30, 40, 30)
+    win.blit(itens_img['coffee'], (7, 65))
+    texto(f"x{collected_itens['coffee']}", color, 30, 69, 30)
+    win.blit(itens_img['boots'], (5, 100))
+    texto(f"x{collected_itens['boots']}", color, 30, 104, 30)
 
     # se o game_state está em start, mostre a pontuação das ultima/s fases junto da mensagem "press start"
     if game_state == 'start':
@@ -293,9 +305,6 @@ def draw_all(game_state):
 
     # faz update da tela
     pg.display.update()
-
-# vamos usar i para passar de mapa por mapa
-i = 1
 
 # reseta o jogo
 def reset_all():
@@ -318,7 +327,7 @@ def reset_all():
 
     global king 
     # recria o jogador 
-    king = pl.player(WINDOW_WIDTH // 2, WINDOW_HEIGHT // 2, 32, 32, win, WINDOW_WIDTH, WINDOW_HEIGHT)
+    king =  pl.player((WINDOW_WIDTH // 2)-16, (WINDOW_HEIGHT // 2)-16, 32, 32, win, WINDOW_WIDTH, WINDOW_HEIGHT)
 
     global zombies
     # recria a lista de inimigos como uma lista vazia, removendo todos inimigos

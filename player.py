@@ -98,7 +98,7 @@ class player(object):
             self.i_frames = False
 
     # responsavel por calcular e controlar o movimento do jogador
-    def calculate_speed(self, keys, mapa):
+    def calculate_speed(self, keys):
         # velocidades em cada eixo
         speedX = 0
         speedY = 0
@@ -140,12 +140,7 @@ class player(object):
         # se o tempo desde o ultimo tiro for maior que o cool down, o jogador pode atirar
         if dt_shot >= self.shot_cooldown:
             # se a arma "wheel" estiver ativa, vamos gerar uma bala em todas as 8 direções principais
-            if self.active_item['wheel'] != -1 and t - self.active_item['wheel'] < self.item_duration:
-                if keys[pg.K_LEFT] or keys[pg.K_RIGHT] or keys[pg.K_UP] or keys[pg.K_DOWN]:
-                    for i in range(0,360,45):
-                        direction.append(i)
-                    self.ticks_last_shot = t
-                
+            if self.active_item['wheel'] != -1 and t - self.active_item['wheel'] < self.item_duration:              
                 # atirar utilizando o mouse enquanto wheel esta ativa
                 if pg.mouse.get_pressed()[0]:
                     self.mouseX, self.mouseY = pg.mouse.get_pos()
@@ -159,30 +154,6 @@ class player(object):
                     self.ticks_last_shot = t
             # caso contrario vamos ver em que direção o jogador está mirando e adicionar essa direção na lista
             else:
-                self.active_item['wheel'] = -1
-                if keys[pg.K_LEFT]:
-                    if keys[pg.K_UP]:
-                        direction.append(135)
-                    elif keys[pg.K_DOWN]:
-                        direction.append(225)
-                    else:
-                        direction.append(180)
-                    self.ticks_last_shot = t
-                elif keys[pg.K_RIGHT]:
-                    if keys[pg.K_UP]:
-                        direction.append(45)
-                    elif keys[pg.K_DOWN]:
-                        direction.append(315)
-                    else:
-                        direction.append(0)
-                    self.ticks_last_shot = t
-                elif keys[pg.K_UP]:
-                    self.ticks_last_shot = t
-                    direction.append(90)
-                elif keys[pg.K_DOWN]:
-                    self.ticks_last_shot = t
-                    direction.append(270)
-
                 # atirar com o mouse, somente quando wheel nn está ativa para evitar criar balas duplicadas
                 # pg.mouse.get_pressed()[0] é true quando o jogador está segurando o botão esquerdo do mouse
                 # [1] e [2] é o botão do meio e da direita respectivamente
@@ -298,7 +269,7 @@ class player(object):
                 self.current_item = None
 
         # chama calculate_speed para calcular as velocidades x e y do jogador
-        speedX, speedY = self.calculate_speed(keys, mapa)
+        speedX, speedY = self.calculate_speed(keys)
 
         # descobre o maior movimento "válido" do jogador, (movimento em que o jogador não entre em um tile que 
         # não deveria conseguir entrar), é uma gambiarra e definitivamente não é a melhor forma de fazer isso,
