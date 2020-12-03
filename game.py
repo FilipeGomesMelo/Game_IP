@@ -68,6 +68,9 @@ pontuacao_total = []
 heart_full = pg.transform.scale(pg.image.load('images/heart_full2.png'), (30,30))
 heart_empty = pg.transform.scale(pg.image.load('images/heart_empty2.png'), (30,30))
 
+# caixa onde o item atual vai aparecer
+canvas = pg.transform.scale(pg.image.load('images/canvas.png'), (48,48)) 
+
 # coloca texto na tela
 def texto(msg, cor, x, y):
     font = pg.font.Font(None, 35)
@@ -251,6 +254,9 @@ def draw_all(game_state, press_start):
             win.blit(heart_full, ((40*i)+5,5))
         else:
             win.blit(heart_empty, ((40*i)+5,5))
+
+    # desenha a caixa onde o item atual aparece
+    win.blit(canvas, (620,5))
 
     # se o game_state está em start, mostre a pontuação das ultima/s fases junto da mensagem "press start"
     if game_state == 'start':
