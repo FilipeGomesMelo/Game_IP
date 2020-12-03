@@ -68,19 +68,24 @@ pontuacao_total = []
 heart_full = pg.transform.scale(pg.image.load('images/heart_full2.png'), (30,30))
 heart_empty = pg.transform.scale(pg.image.load('images/heart_empty2.png'), (30,30))
 
+# imagem da tela de começo de cada fase
+press_start = pg.transform.scale(pg.image.load('images/press_start.png'), (98*3,14*3))
+
 # caixa onde o item atual vai aparecer
 canvas = pg.transform.scale(pg.image.load('images/canvas.png'), (48,48)) 
 
 # coloca texto na tela
-def texto(msg, cor, x, y):
-    font = pg.font.Font(None, 35)
+def texto(msg, cor, x, y, tam):
+    font = pg.font.Font(None, tam)
     texto1 = font.render(msg, True, cor)
     win.blit(texto1, (x, y))
 
+enemy_time = 1000 
 
 # roda o jogo
 def main():
     global pontuacao_anterior
+    global enemy_time
 
     # estado de jogo
     game_state = 'start'
@@ -90,11 +95,8 @@ def main():
     # ticks do ultimo inimigo para poder spawnar os inimigos
     ticks_last_enemy = 0
 
-    # imagem da tela de começo de cada fase
-    press_start = pg.transform.scale(pg.image.load('images/press_start.png'), (98*3,14*3))
-
     # mude para true para ver o fps
-    show_fps = True
+    show_fps = False
     if show_fps:
         font = pg.font.Font(None, 20)
         clock = pg.time.Clock()
@@ -117,6 +119,7 @@ def main():
 
         # roda a parte da gameplay
         if game_state == 'play':
+            print(enemy_time)
             # Calcula delta time, usado pra fazer o movimento continuo
             t = pg.time.get_ticks()
             dt = (t - ticks_last_frame)
@@ -124,8 +127,8 @@ def main():
 
             # responsavel por spawnar os inimigos
             dt_enemy = t - ticks_last_enemy
-            if dt_enemy > 1000 and king.active_item['clock'] == -1:
-                zombies.append(ini.inimigo(0, WINDOW_HEIGHT // 2, 32, 32, win, WINDOW_WIDTH, WINDOW_HEIGHT, mapa))
+            if dt_enemy > enemy_time  and king.active_item['clock'] == -1:
+                zombies.append(ini.inimigo(32, 32, win, WINDOW_WIDTH, WINDOW_HEIGHT, mapa))
                 ticks_last_enemy = t
 
             # update o jogador e as balas
@@ -139,19 +142,22 @@ def main():
                 game_state = 'start'
                 # reseta tudo
                 reset_all()
+                
             # checka por inimigos em todas as balas
             for bullet in king.bullets:
                 killed = bullet.check_enemy(zombies)
                 # check_enemy() retorna -1 se a bala não está tocando em nenhum inimigo, caso contrario, ela retorna o inimigo
                 if killed != -1:
+                    if enemy_time > 300:
+                        enemy_time -= 5
                     # toca o som de morte do inimigo
                     enemy_death.play()
                     # remove o inimigo da lista de inimigos
                     zombies.pop(zombies.index(killed))
                     # gera um número aleatório que vai determinar o item
-                    rand = round((random()*1000)%100)
+                    rand = round((random()*1000)%120)
                     # só nasce um item se o número aleatório estiver nesse intervalo
-                    if 0 <= rand < 65:
+                    if 0 <= rand < 62:
                         # cria um novo item
                         items.append(it.item(killed.x, killed.y, win, rand, t))
 
@@ -205,7 +211,7 @@ def main():
                     zombie.update(king.x, king.y, dt, mapa)
 
             # desativa o item 'clock' se ele já está ativo a tempo suficiente
-            if t-king.active_item['clock'] > king.item_duration:
+            if t-king.active_item['clock'] > king.item_duration/2:
                 king.active_item['clock'] = -1
 
             # checa se algum inimigo está tocando o jogador e toca o som de dano
@@ -217,7 +223,7 @@ def main():
             print(king.current_item, king.health)
 
         # desenha tudo 
-        draw_all(game_state, press_start)
+        draw_all(game_state)
 
         # mostra o fps do jogo e o dicionário de itens coletados
         if show_fps:
@@ -233,7 +239,7 @@ def main():
 
 
 #  desenha tudo
-def draw_all(game_state, press_start):
+def draw_all(game_state):
     # desenha o mapa
     mapa.draw()
 
@@ -261,9 +267,9 @@ def draw_all(game_state, press_start):
     # se o game_state está em start, mostre a pontuação das ultima/s fases junto da mensagem "press start"
     if game_state == 'start':
         if i == 1:
-            texto(f"Pontuação total:{sum(pontuacao_total)}", (188, 51, 74), 220, 245)
+            texto(f"Pontuação total: {sum(pontuacao_total)}", (188, 51, 74), 220, 245, 35)
         else:
-            texto(f"Pontuação anterior:{pontuacao_anterior['coin']}", (188, 51, 74), 220, 245)
+            texto(f"Pontuação anterior: {pontuacao_anterior['coin']}", (188, 51, 74), 220, 245, 35)
         win.blit(press_start, (200, 200))
 
     # faz update da tela
@@ -277,7 +283,8 @@ def reset_all():
     global pontuacao_total
     global i
     global collected_itens
-
+    global enemy_time 
+    enemy_time = 1000
     # quando i == 1, resetamos a pontuação total
     if i == 1:
         pontuacao_total = []

@@ -14,7 +14,7 @@ pygame.init()
 
 class inimigo(object):
     # inicializa o inimigo
-    def __init__(self, x, y, width, height, window, WINDOW_WIDTH, WINDOW_HEIGHT,mapa):
+    def __init__(self, width, height, window, WINDOW_WIDTH, WINDOW_HEIGHT,mapa):
         # cria uma seed para escolher o ponto de spawn aleatório
         seed(datetime.now())
 

@@ -70,7 +70,7 @@ class player(object):
         self.current_item = None
 
         # tempo de duração do item
-        self.item_duration = 5000
+        self.item_duration = 10000
 
     # checa se o jogador está tocando um inimigo
     def check_enemy(self, enemies, t):

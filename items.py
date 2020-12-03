@@ -43,7 +43,7 @@ class item(object):
             self.type = 'fast_shot'
             self.width = 32
             self.height = 32
-        elif 60 <= rand < 65:
+        elif 60 <= rand < 62:
             self.type = 'clock'
             self.width = 32
             self.height = 32
