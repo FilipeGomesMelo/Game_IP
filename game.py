@@ -124,8 +124,6 @@ def main():
 
         # roda a parte da gameplay
         if game_state == 'play':
-            print(enemy_time)
-
             # responsavel por spawnar os inimigos
             dt_enemy = t - ticks_last_enemy
             if dt_enemy > enemy_time  and king.active_item['clock'] == -1:
@@ -221,7 +219,6 @@ def main():
             
             # isso é usa solução temporária para mostrar o item atual e a vida do jogador
             # o plano é mover isso para a tela do jogo
-            print(king.current_item, king.health)
 
         # desenha tudo 
         draw_all(game_state)
