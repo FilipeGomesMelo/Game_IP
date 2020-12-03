@@ -64,6 +64,10 @@ pontuacao_anterior = {'coin': 0}
 # salva a pontuação do jogador nos 3 últimos mapas, reseta sempre que um ciclo novo começa
 pontuacao_total = []
 
+# imagem dos corações
+heart_full = pg.transform.scale(pg.image.load('images/heart_full2.png'), (30,30))
+heart_empty = pg.transform.scale(pg.image.load('images/heart_empty2.png'), (30,30))
+
 # coloca texto na tela
 def texto(msg, cor, x, y):
     font = pg.font.Font(None, 35)
@@ -241,6 +245,13 @@ def draw_all(game_state, press_start):
     # desenha o jogador e as suas balas 
     king.draw()
 
+    # desenha os corações do jogador
+    for i in range(king.max_health):
+        if i < king.health:
+            win.blit(heart_full, ((40*i)+5,5))
+        else:
+            win.blit(heart_empty, ((40*i)+5,5))
+
     # se o game_state está em start, mostre a pontuação das ultima/s fases junto da mensagem "press start"
     if game_state == 'start':
         if i == 1:
@@ -274,10 +285,9 @@ def reset_all():
         i += 1
 
     global king 
-    
     # recria o jogador 
     king = pl.player(WINDOW_WIDTH // 2, WINDOW_HEIGHT // 2, 32, 32, win, WINDOW_WIDTH, WINDOW_HEIGHT)
-    
+
     global zombies
     # recria a lista de inimigos como uma lista vazia, removendo todos inimigos
     zombies = []

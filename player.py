@@ -63,7 +63,8 @@ class player(object):
         self.projectile_hit_wall = pg.mixer.Sound("sounds/projectile_wall.wav")
 
         # vida do jogador
-        self.health = 3
+        self.max_health = 3
+        self.health = self.max_health
 
         # item atual do jogador
         self.current_item = None
@@ -312,7 +313,7 @@ class player(object):
         # desenha as balas
         for bullet in self.bullets:
             bullet.draw()
-            
+
         # se o jogador estiver invulnerável, ele ficara "piscando", sendo desenhado frame sim e frame não     
         if self.i_frames:
             # só desenha nos frames pares desde o frame em que o jogador levou o dano

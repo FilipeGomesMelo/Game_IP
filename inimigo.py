@@ -11,6 +11,7 @@ pygame.init()
 #   Essa é a classe dos inimigos, ela cria o inimigo em um bloco de spawn aleatório         #
 #   e move ele em linha reta na direção do jogador                                          #
 #############################################################################################
+
 class inimigo(object):
     # inicializa o inimigo
     def __init__(self, x, y, width, height, window, WINDOW_WIDTH, WINDOW_HEIGHT,mapa):

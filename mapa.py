@@ -132,5 +132,3 @@ class mapa(object):
         for i in range(len(self.map)):
             for j in range(len(self.map)):
                 self.win.blit(self.tiles[self.map[j][i]]['sprite'], (self.x+32*i, self.y+32*j))
-
-
