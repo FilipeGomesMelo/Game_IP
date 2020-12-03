@@ -237,6 +237,13 @@ def main():
         # update diplay
         pg.display.update()
 
+itens_img = {'coin': pg.transform.scale(pg.image.load('images/coin.png'), (18,18)),
+            'S_coin': pg.transform.scale(pg.image.load('images/coin_special.png'), (18,18)),
+            'boots': pg.transform.scale(pg.image.load('images/boots.png'), (26,26)),
+            'coffee': pg.transform.scale(pg.image.load('images/coffee.png'), (24,24)),
+            'multi_shot': pg.transform.scale(pg.image.load('images/multi_shot.png'), (32,32)),
+            'fast_shot': pg.transform.scale(pg.image.load('images/fast_shot.png'), (32,32)),
+            'clock': pg.transform.scale(pg.image.load('images/clock.png'), (32,32))}
 
 #  desenha tudo
 def draw_all(game_state):
@@ -263,6 +270,18 @@ def draw_all(game_state):
 
     # desenha a caixa onde o item atual aparece
     win.blit(canvas, (620,5))
+
+    # desenha o item atual acima da caixa
+    if(king.current_item != None):
+        win.blit(itens_img[king.current_item], (628, 13))
+
+    # desenho os itens coletaveis
+    win.blit(itens_img['coin'], (10, 40))
+    texto(f"x{collected_itens['coin']}", (88, 29, 43), 30, 40, 30)
+    win.blit(itens_img['coffee'], (10, 65))
+    texto(f"x{collected_itens['coffee']}", (88, 29, 43), 30, 69, 30)
+    win.blit(itens_img['boots'], (8.50, 100))
+    texto(f"x{collected_itens['boots']}", (88, 29, 43), 30, 104, 30)
 
     # se o game_state está em start, mostre a pontuação das ultima/s fases junto da mensagem "press start"
     if game_state == 'start':
