@@ -29,13 +29,13 @@ class player(object):
         self.shot_cooldown = 500
         self.shot_cooldown_normal = self.shot_cooldown
 
-        # janela em que o jogador vai ser desenhado e suas dimenções
+        # janela em que o jogador vai ser desenhado e suas dimensões
         self.win = window
         self.WINDOW_WIDTH = WINDOW_WIDTH
         self.WINDOW_HEIGHT = WINDOW_HEIGHT
 
         # sprites do jogador
-        self.img = pg.transform.scale(pg.image.load('images/cowboy_idle.png'), (32,32))
+        self.img = pg.transform.scale(pg.image.load('images/wizard_idle.png'), (32,36))
 
         # lista de objetos projectile (balas)
         self.bullets = []
