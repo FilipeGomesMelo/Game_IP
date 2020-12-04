@@ -35,7 +35,7 @@ class player(object):
         self.WINDOW_HEIGHT = WINDOW_HEIGHT
 
         # sprites do jogador
-        self.img = pg.transform.scale(pg.image.load('images/wizard_idle.png'), (32,36))
+        self.img = pg.transform.scale(pg.image.load('images/wizard_idle2.png'), (32,36))
 
         # lista de objetos projectile (balas)
         self.bullets = []

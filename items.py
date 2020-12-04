@@ -52,10 +52,10 @@ class item(object):
         self.img = {'coin': pg.transform.scale(pg.image.load('images/coin.png'), (18,18)),
                     'S_coin': pg.transform.scale(pg.image.load('images/coin_special.png'), (18,18)),
                     'boots': pg.transform.scale(pg.image.load('images/boots.png'), (26,26)),
-                    'coffee': pg.transform.scale(pg.image.load('images/coffee.png'), (24,24)),
-                    'multi_shot': pg.transform.scale(pg.image.load('images/multi_shot.png'), (32,32)),
-                    'fast_shot': pg.transform.scale(pg.image.load('images/fast_shot.png'), (32,32)),
-                    'clock': pg.transform.scale(pg.image.load('images/clock.png'), (32,32))}
+                    'coffee': pg.transform.scale(pg.image.load('images/coffee2.png'), (24,24)),
+                    'multi_shot': pg.transform.scale(pg.image.load('images/multi_shot2.png'), (32,32)),
+                    'fast_shot': pg.transform.scale(pg.image.load('images/fast_shot2.png'), (32,32)),
+                    'clock': pg.transform.scale(pg.image.load('images/clock2.png'), (32,32))}
 
         # determina se o item existe ou não            
         self.existes = True

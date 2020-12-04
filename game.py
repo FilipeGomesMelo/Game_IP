@@ -22,9 +22,9 @@ pg.mixer.music.play(-1)
 
 # efeitos sonoros
 damage_sound = pg.mixer.Sound("sounds/hurt.wav")
-walk_sound = pg.mixer.Sound("sounds/walk_grass.wav")
 projectile_hit_wall = pg.mixer.Sound("sounds/projectile_wall.wav")
 enemy_death = pg.mixer.Sound("sounds/enemy_dies.wav")
+collect_item = pg.mixer.Sound("sounds/rupee.wav")
 
 # dimenções da janela
 WINDOW_WIDTH = 672
@@ -99,7 +99,7 @@ def main():
     show_fps = False
     if show_fps:
         font = pg.font.Font(None, 20)
-        clock = pg.time.Clock()
+    clock = pg.time.Clock()
     
     # loop infinito que roda o jogo
     while True:
@@ -167,9 +167,11 @@ def main():
                 col = item.player_colision(king)
                 # player_colision retorna -1 se o item não está tocando no jogador
                 if col != -1 and col != 'S_coin':
+                    collect_item.play()
                     collected_itens[col] += 1
                 # S_coins contam como 10 coins normais
                 if col == 'S_coin':
+                    collect_item.play()
                     collected_itens['coin'] += 10
                 # bootas e café tem influênci mecânica até o jogador morrer
                 elif col == 'boots':
@@ -230,7 +232,7 @@ def main():
             itens = font.render(str(collected_itens), True, pg.Color('Black'))
             win.blit(itens, (50, 70))
             pg.display.flip()
-            clock.tick(60)
+        clock.tick(60)
 
         # update diplay
         pg.display.update()
@@ -238,10 +240,10 @@ def main():
 itens_img = {'coin': pg.transform.scale(pg.image.load('images/coin.png'), (18,18)),
             'S_coin': pg.transform.scale(pg.image.load('images/coin_special.png'), (18,18)),
             'boots': pg.transform.scale(pg.image.load('images/boots.png'), (26,26)),
-            'coffee': pg.transform.scale(pg.image.load('images/coffee.png'), (24,24)),
-            'multi_shot': pg.transform.scale(pg.image.load('images/multi_shot.png'), (32,32)),
-            'fast_shot': pg.transform.scale(pg.image.load('images/fast_shot.png'), (32,32)),
-            'clock': pg.transform.scale(pg.image.load('images/clock.png'), (32,32))}
+            'coffee': pg.transform.scale(pg.image.load('images/coffee2.png'), (24,24)),
+            'multi_shot': pg.transform.scale(pg.image.load('images/multi_shot2.png'), (32,32)),
+            'fast_shot': pg.transform.scale(pg.image.load('images/fast_shot2.png'), (32,32)),
+            'clock': pg.transform.scale(pg.image.load('images/clock2.png'), (32,32))}
 
 # vamos usar i para passar de mapa por mapa
 i = 1
@@ -282,7 +284,7 @@ def draw_all(game_state):
     elif i == 2:
         color = (88, 29, 43)
     elif i == 3:
-        color = (242, 188, 82)
+        color = (243, 23, 60)
 
     # desenho os itens coletaveis
     win.blit(itens_img['coin'], (8, 40))
