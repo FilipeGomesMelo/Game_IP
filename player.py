@@ -47,19 +47,30 @@ class player(object):
         self.mouseX = self.x
         self.mouseY = self.y
 
+        # i_frames é um bool que diz se os frames de invulnerável
         self.i_frames = False
+
+        # tempo de duração dos frames de invulnerabilidade
         self.i_frames_duration = 1000
+
+        # ticks da ultima vez que o jogador levou dano para calcular o tempo de frames de invulnerabilidade
         self.ticks_last_hit = 0
 
+        # blink vai ser usado para 'piscar' o jogador quando este estiver invulnerável, mostrando ele frame sim e frame não
         self.blink = 0
 
+        # som do projétil batendo em uma parede
         self.projectile_hit_wall = pg.mixer.Sound("sounds/projectile_wall.wav")
 
-        self.health = 3
+        # vida do jogador
+        self.max_health = 3
+        self.health = self.max_health
 
+        # item atual do jogador
         self.current_item = None
 
-        self.item_duration = 5000
+        # tempo de duração do item
+        self.item_duration = 10000
 
     # checa se o jogador está tocando um inimigo
     def check_enemy(self, enemies, t):
@@ -79,18 +90,16 @@ class player(object):
                         self.ticks_last_hit = t
                         # takes damage
                         self.health -= 1
-                        print(self.health)
                         # interrompe a função
                         return True
+
         # se já se passou o tempo de duração dos frames de invulnerabilidade, desative a invunerabilidade
         elif t - self.ticks_last_hit > self.i_frames_duration:
             self.i_frames = False
 
-
-                
-
     # responsavel por calcular e controlar o movimento do jogador
-    def calculate_speed(self, keys, mapa):
+    def calculate_speed(self, keys):
+        # velocidades em cada eixo
         speedX = 0
         speedY = 0
 
@@ -115,6 +124,7 @@ class player(object):
             speedY = 0
         elif (self.y >= self.WINDOW_HEIGHT-self.height and speedY > 0):
             speedY = 0
+
         # retorna as velocidades do jogador no eixo X e Y para calcular a sua nova posição
         return speedX, speedY
 
@@ -127,19 +137,10 @@ class player(object):
         t = pg.time.get_ticks()
         dt_shot = (t - self.ticks_last_shot)   
         
-        if keys[pg.K_SPACE] and self.current_item != None:
-                self.active_item[self.current_item] = t
-                self.current_item = None
-
         # se o tempo desde o ultimo tiro for maior que o cool down, o jogador pode atirar
         if dt_shot >= self.shot_cooldown:
             # se a arma "wheel" estiver ativa, vamos gerar uma bala em todas as 8 direções principais
-            if self.active_item['wheel'] != -1 and t - self.active_item['wheel'] < self.item_duration:
-                if keys[pg.K_LEFT] or keys[pg.K_RIGHT] or keys[pg.K_UP] or keys[pg.K_DOWN]:
-                    for i in range(0,360,45):
-                        direction.append(i)
-                    self.ticks_last_shot = t
-                
+            if self.active_item['wheel'] != -1 and t - self.active_item['wheel'] < self.item_duration:              
                 # atirar utilizando o mouse enquanto wheel esta ativa
                 if pg.mouse.get_pressed()[0]:
                     self.mouseX, self.mouseY = pg.mouse.get_pos()
@@ -153,30 +154,6 @@ class player(object):
                     self.ticks_last_shot = t
             # caso contrario vamos ver em que direção o jogador está mirando e adicionar essa direção na lista
             else:
-                self.active_item['wheel'] = -1
-                if keys[pg.K_LEFT]:
-                    if keys[pg.K_UP]:
-                        direction.append(135)
-                    elif keys[pg.K_DOWN]:
-                        direction.append(225)
-                    else:
-                        direction.append(180)
-                    self.ticks_last_shot = t
-                elif keys[pg.K_RIGHT]:
-                    if keys[pg.K_UP]:
-                        direction.append(45)
-                    elif keys[pg.K_DOWN]:
-                        direction.append(315)
-                    else:
-                        direction.append(0)
-                    self.ticks_last_shot = t
-                elif keys[pg.K_UP]:
-                    self.ticks_last_shot = t
-                    direction.append(90)
-                elif keys[pg.K_DOWN]:
-                    self.ticks_last_shot = t
-                    direction.append(270)
-
                 # atirar com o mouse, somente quando wheel nn está ativa para evitar criar balas duplicadas
                 # pg.mouse.get_pressed()[0] é true quando o jogador está segurando o botão esquerdo do mouse
                 # [1] e [2] é o botão do meio e da direita respectivamente
@@ -187,7 +164,7 @@ class player(object):
                     dx = (self.mouseX-5) - (self.x+self.width/2)
                     dy = (self.mouseY-5) - (self.y+self.height/2)
 
-                    # calcula o angulo em graus
+                    # calcula o angulo em graus, eu inverto dy somente para tornar os angulos mais intuitivos no sentido convencional
                     rads = atan2(-dy, dx)
                     rads %= 2*pi
                     degs = round(degrees(rads))
@@ -213,6 +190,7 @@ class player(object):
 
     # adiciona as balas nas direções selecionadas
     def add_bullets(self, direction):
+        # usa as direções para criar novas balas
         for i in direction:
             self.bullets.append(proj.projectile(self.x+self.width/2, self.y+self.height/2, 12, 12, self.win, self.WINDOW_WIDTH, self.WINDOW_HEIGHT, i))
 
@@ -274,7 +252,10 @@ class player(object):
     def control(self, dt, mapa):
         # teclas precionadas
         keys = pg.key.get_pressed()   
+
+        # ticks nesse momento
         t = pg.time.get_ticks()
+
         # ajusta a velocidade do cooldown das balas, temporaria, fazer função propria para isso quando possível    
         if (self.active_item['fast_shot'] != -1) and (t - self.active_item['fast_shot'] < self.item_duration):
             self.shot_cooldown = self.shot_cooldown_normal/2
@@ -282,9 +263,17 @@ class player(object):
             self.active_item['fast_shot'] = -1
             self.shot_cooldown = self.shot_cooldown_normal
         
-        # chama calculate_speed para calcular as velocidades x e y do jogador
-        speedX, speedY = self.calculate_speed(keys, mapa)
+        # ativa o item atual
+        if keys[pg.K_SPACE] and self.current_item != None:
+                self.active_item[self.current_item] = t
+                self.current_item = None
 
+        # chama calculate_speed para calcular as velocidades x e y do jogador
+        speedX, speedY = self.calculate_speed(keys)
+
+        # descobre o maior movimento "válido" do jogador, (movimento em que o jogador não entre em um tile que 
+        # não deveria conseguir entrar), é uma gambiarra e definitivamente não é a melhor forma de fazer isso,
+        # mas foi o que eu consegui
         self.maior_movimento_valido(dt, mapa, speedX, speedY)
 
         # chama a função responsavel por fazer os tiros do jogador
@@ -292,8 +281,10 @@ class player(object):
 
     # desenha as balas e depois o jogador por cima delas
     def draw(self):
+        # desenha as balas
         for bullet in self.bullets:
             bullet.draw()
+
         # se o jogador estiver invulnerável, ele ficara "piscando", sendo desenhado frame sim e frame não     
         if self.i_frames:
             # só desenha nos frames pares desde o frame em que o jogador levou o dano
