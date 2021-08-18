@@ -103,7 +103,6 @@ def main():
     
     # loop infinito que roda o jogo
     while True:
-        print(enemy_time)
         # permite fechar a janela
         for event in pg.event.get():
             if event.type == pg.QUIT:
@@ -202,7 +201,6 @@ def main():
                 if item.existes == False:
                     items.pop(items.index(item))
 
-            # print(king.current_item, collected_itens)
             # update do inimigo
             for zombie in zombies:
                 # quando a função update do zombie recebe -1, eles não se movem

@@ -71,7 +71,7 @@ class player(object):
         self.current_item = None
 
         # tempo de duração do item
-        self.item_duration = 10000
+        self.item_duration = 7500
 
     def path_creator(self, mapa):
         x = int((self.x+self.width//2)//32)
