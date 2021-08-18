@@ -103,6 +103,7 @@ def main():
     
     # loop infinito que roda o jogo
     while True:
+        print(enemy_time)
         # permite fechar a janela
         for event in pg.event.get():
             if event.type == pg.QUIT:
@@ -132,6 +133,7 @@ def main():
 
             # update o jogador e as balas
             king.update(dt, mapa)
+            path = king.path_creator(mapa)
 
             # reseta tudo e troca de mapa se o jogador morrer
             if king.health <= 0:
@@ -206,10 +208,10 @@ def main():
                 # quando a função update do zombie recebe -1, eles não se movem
                 # se o item 'clock' está ativado, os inimigos não saem do lugar
                 if king.active_item['clock'] != -1:
-                    zombie.update(-1, -1, dt, mapa)
+                    zombie.update(-1, -1, dt, mapa, path)
                 else:
                     # caso contrario, os inimigos recebem a posição atual do jogador para poder se mover em sua direção
-                    zombie.update(king.x, king.y, dt, mapa)
+                    zombie.update(king.x, king.y, dt, mapa, path)
 
             # desativa o item 'clock' se ele já está ativo a tempo suficiente
             if t-king.active_item['clock'] > king.item_duration/2:
@@ -219,9 +221,6 @@ def main():
             if king.check_enemy(zombies, t):
                 damage_sound.play()
             
-            # isso é usa solução temporária para mostrar o item atual e a vida do jogador
-            # o plano é mover isso para a tela do jogo
-
         # desenha tudo 
         draw_all(game_state)
 

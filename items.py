@@ -77,8 +77,6 @@ class item(object):
                 return self.type
         return -1
             
-
-
     def update(self, t):
         # se o item existe a mais tempo do que deveria, destroi o item
         if t - self.t >= self.duration:

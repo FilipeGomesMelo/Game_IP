@@ -47,7 +47,9 @@ class inimigo(object):
         self.img = pygame.transform.scale(pygame.image.load('images/inimigo.png'), (self.width, self.height))
 
         # velocidade do inimigo
-        self.vel = 0.10
+        self.vel = 0.1
+
+        self.count = 0
 
     # desenha o inimigo na tela
     def draw(self):
@@ -109,13 +111,20 @@ class inimigo(object):
                         break
                     y -= 1
 
+    def follow_path(self, path):
+        x = int((self.x+self.width//2)//32)
+        y = int((self.y+self.height//2)//32)
+        return path[y][x]
+
     # faz update nesse inimigo, basicamente só faz ele se mover na direção do jogador
-    def update(self, x, y, dt, mapa):
+    def update(self, x, y, dt, mapa, path):
         # se a função recebe -1 e -1 como x e y, o inimigo não se move, isso é usado para o item relógio
         if x != -1 and y != -1:
+            target = self.follow_path(path)
+            
             # variação de x e variação de y da posição do inimigo e a posição do jogador, vamos usar para calcular o ângulo
-            dx = x - self.x
-            dy = y - self.y
+            dx = target[1][0]-16 - self.x
+            dy = target[1][1]-16 - self.y
             
             # calcula o angulo em radianos e coloca esse angulo na janela de 0~2*pi
             rads = atan2(dy, dx)
@@ -124,6 +133,11 @@ class inimigo(object):
             # calcula a velocidade do inimigo em cada eixo baseado no angulo em radianos
             speedX = self.vel * round(math.cos(rads), 3)
             speedY = self.vel * round(math.sin(rads), 3)
+        
+            if self.count == 20:
+                self.img = pygame.transform.flip(self.img, True, False)
+                self.count = 0
+            self.count += 1
         else:
             # não move enquanto o item relógio está ativado
             speedX = 0

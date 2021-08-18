@@ -1,6 +1,7 @@
 import pygame as pg
 import projectile as proj
 from math import atan2, degrees, pi
+import heapq
 
 # initialize Pygame
 pg.init()
@@ -72,6 +73,38 @@ class player(object):
         # tempo de duração do item
         self.item_duration = 10000
 
+    def path_creator(self, mapa):
+        x = int((self.x+self.width//2)//32)
+        y = int((self.y+self.height//2)//32)
+
+        fila = []
+        heapq.heappush(fila,([0, (x, y)]))
+        
+        matriz = [[None for _ in range(len(mapa.map[0]))] for _ in range(len(mapa.map))]
+        matriz[y][x] = (self.x+self.width//2, self.y+self.height//2)
+        moves = [(0,1), (1,1), (1,0), (1,-1), (0,-1), (-1,-1), (-1,0), (-1,1)]
+
+        while fila:
+            atual = heapq.heappop(fila)
+            x = atual[1][0]
+            y = atual[1][1]
+            dist = atual[0]
+            for move_x, move_y in moves:
+                try:
+                    if abs(move_x+move_y) != 1:
+                        if (not matriz[y+move_y][x+move_x] or matriz[y+move_y][x+move_x][0] > dist+1.4)\
+                            and mapa.tiles[mapa.map[y+move_y][x+move_x]]['type'] in ['chao', 'spawn']\
+                            and (mapa.tiles[mapa.map[y][x+move_x]]['type'] in ['chao', 'spawn'] \
+                            or mapa.tiles[mapa.map[y+move_y][x]]['type'] in ['chao', 'spawn']):
+                            heapq.heappush(fila,([dist+1.4, (x+move_x, y+move_y)]))
+                            matriz[y+move_y][x+move_x] = [dist+1.4, (x*32+16, y*32+16)]
+                    elif (not matriz[y+move_y][x+move_x] or matriz[y+move_y][x+move_x][0] > dist+1) and mapa.tiles[mapa.map[y+move_y][x+move_x]]['type'] in ['chao', 'spawn']:
+                        heapq.heappush(fila,([dist+1, (x+move_x, y+move_y)]))
+                        matriz[y+move_y][x+move_x] = [dist+1, (x*32+16, y*32+16)]     
+                except:
+                    pass
+        
+        return matriz
     # checa se o jogador está tocando um inimigo
     def check_enemy(self, enemies, t):
 
