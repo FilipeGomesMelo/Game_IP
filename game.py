@@ -96,7 +96,7 @@ def main():
     ticks_last_enemy = 0
 
     # mude para true para ver o fps
-    show_fps = True
+    show_fps = False
     if show_fps:
         font = pg.font.Font(None, 20)
     clock = pg.time.Clock()
