@@ -1,7 +1,6 @@
 import pygame
-from math import atan2, degrees, pi
-import math
-from random import seed, random, shuffle
+from math import atan2, pi, cos, sin
+from random import seed, shuffle
 from datetime import datetime
 
 # inicializa pygame
@@ -67,7 +66,8 @@ class inimigo(object):
         for enemy in enemies:
             if enemy == self: continue
             for corner in corners:
-                if enemy.x-1 <= corner[0] <= enemy.x+enemy.width+1 and enemy.y-1 <= corner[1] <= enemy.y+enemy.height+1:
+                if enemy.x-1 <= corner[0] <= enemy.x+enemy.width+1\
+                    and enemy.y-1 <= corner[1] <= enemy.y+enemy.height+1:
                     return True
         
         return False
@@ -80,7 +80,10 @@ class inimigo(object):
         a = 2
 
         # corners salva os extremos da "hitbox"
-        corners = [[self.y+a, self.x+a], [self.y+a, self.x+self.width-a], [self.y+self.height-a, self.x+a], [self.y+self.height-a, self.x+self.width-a]]
+        corners = [[self.y+a, self.x+a],
+                   [self.y+a, self.x+self.width-a],
+                   [self.y+self.height-a, self.x+a],
+                   [self.y+self.height-a, self.x+self.width-a]]
 
         # move o inimigo somente se a posição final for em um bloco tipo 'chão'
         # basicamente, se eu for me mover para uma posição e essa posição não for válida, eu tento dnv com um px a menos
@@ -114,7 +117,10 @@ class inimigo(object):
                     x-=1
         
         # atualiza corners agora que movemos o personagem no eixo x
-        corners = [[self.y+a, self.x+a], [self.y+a, self.x+self.width-a], [self.y+self.height-a, self.x+a], [self.y+self.height-a, self.x+self.width-a]]
+        corners = [[self.y+a, self.x+a],
+                   [self.y+a, self.x+self.width-a],
+                   [self.y+self.height-a, self.x+a],
+                   [self.y+self.height-a, self.x+self.width-a]]
 
         # mesma coisa que foi feita com o eixo x
         if mapa.tiles[mapa.map[int((corners[0][0]+speedY*dt)//32)%21][int((corners[0][1])//32)%21]]['type'] not in ['parede', 'passar']\
@@ -154,7 +160,7 @@ class inimigo(object):
         # se a função recebe -1 e -1 como x e y, o inimigo não se move, isso é usado para o item relógio
         if x != -1 and y != -1:
             target = self.follow_path(path)
-            
+            if not target: target = [0, (x, y)]
             # variação de x e variação de y da posição do inimigo e a posição do jogador, vamos usar para calcular o ângulo
             dx = target[1][0]-16 - self.x
             dy = target[1][1]-16 - self.y
@@ -164,8 +170,8 @@ class inimigo(object):
             rads %= 2 * pi
             
             # calcula a velocidade do inimigo em cada eixo baseado no angulo em radianos
-            speedX = self.vel * round(math.cos(rads), 3)
-            speedY = self.vel * round(math.sin(rads), 3)
+            speedX = self.vel * round(cos(rads), 3)
+            speedY = self.vel * round(sin(rads), 3)
         
             if self.count == 20:
                 self.img = pygame.transform.flip(self.img, True, False)

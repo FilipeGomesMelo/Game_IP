@@ -95,12 +95,13 @@ class player(object):
 
                 if abs(move_x+move_y) != 1:
                     if (not matriz[y+move_y][x+move_x] or matriz[y+move_y][x+move_x][0] > dist+1.4)\
-                        and mapa.tiles[mapa.map[y+move_y][x+move_x]]['type'] in ['chao', 'spawn']\
-                        and (mapa.tiles[mapa.map[y][x+move_x]]['type'] in ['chao', 'spawn'] \
-                        and mapa.tiles[mapa.map[y+move_y][x]]['type'] in ['chao', 'spawn']):
+                          and mapa.tiles[mapa.map[y+move_y][x+move_x]]['type'] in ['chao', 'spawn']\
+                          and (mapa.tiles[mapa.map[y][x+move_x]]['type'] in ['chao', 'spawn'] \
+                          and mapa.tiles[mapa.map[y+move_y][x]]['type'] in ['chao', 'spawn']):
                         heapq.heappush(fila,([dist+1.4, (x+move_x, y+move_y)]))
                         matriz[y+move_y][x+move_x] = [dist+1.4, (x*32+16, y*32+16)]
-                elif (not matriz[y+move_y][x+move_x] or matriz[y+move_y][x+move_x][0] > dist+1) and mapa.tiles[mapa.map[y+move_y][x+move_x]]['type'] in ['chao', 'spawn']:
+                elif (not matriz[y+move_y][x+move_x] or matriz[y+move_y][x+move_x][0] > dist+1)\
+                      and mapa.tiles[mapa.map[y+move_y][x+move_x]]['type'] in ['chao', 'spawn']:
                     heapq.heappush(fila,([dist+1, (x+move_x, y+move_y)]))
                     matriz[y+move_y][x+move_x] = [dist+1, (x*32+16, y*32+16)]     
 
@@ -109,12 +110,16 @@ class player(object):
     def check_enemy(self, enemies, t):
 
         # quatro cantos do jogador
-        corners = [[self.x, self.y], [self.x+self.width, self.y], [self.x, self.y+self.height], [self.x+self.width, self.y+self.height]]
+        corners = [[self.x, self.y],
+                   [self.x+self.width, self.y],
+                   [self.x, self.y+self.height],
+                   [self.x+self.width, self.y+self.height]]
         # se o jogador não estiver invulnerável, vemos se o jogador está tocando em um inimigo
         if not self.i_frames:
             for enemy in enemies:
                 for corner in corners:
-                    if enemy.x+1 <= corner[0] <= enemy.x + enemy.width and enemy.y <= corner[1] <= enemy.y + enemy.height:
+                    if enemy.x+1 <= corner[0] <= enemy.x + enemy.width\
+                        and enemy.y <= corner[1] <= enemy.y + enemy.height:
                         # reseta blink
                         self.blink = 0
                         # ativa frames de invulnerável
@@ -162,7 +167,7 @@ class player(object):
         return speedX, speedY
 
     # controla a mira e gera novas balas
-    def new_bullets(self, keys):
+    def new_bullets(self):
         # esse vetor corresponde as direções de todas as balas que vamos criar
         direction = []
         
@@ -209,7 +214,8 @@ class player(object):
                     self.ticks_last_shot = t
             
             # se a shot_gun estiver ativa, colocaremos mais duas balas, a +15º e a -15º de cada bala já existente
-            if (self.active_item['multi_shot']) != -1 and (t - self.active_item['multi_shot'] < self.item_duration):
+            if (self.active_item['multi_shot']) != -1\
+                and (t - self.active_item['multi_shot'] < self.item_duration):
                 for i in range(len(direction)):
                     direction.append((direction[i]-15)%360)
                     direction.append((direction[i]+15)%360)
@@ -233,12 +239,18 @@ class player(object):
         a = 3
 
         # corners salva os extremos da "hitbox"
-        corners = [[self.y+a, self.x+a], [self.y+a, self.x+self.width-a], [self.y+self.height-a, self.x+a], [self.y+self.height-a, self.x+self.width-a]]
+        corners = [[self.y+a, self.x+a],
+                   [self.y+a, self.x+self.width-a],
+                   [self.y+self.height-a, self.x+a],
+                   [self.y+self.height-a, self.x+self.width-a]]
 
         # move o jogador somente se a posição final for em um bloco tipo 'chão'
         # basicamente, se eu for me mover para uma posição e essa posição não for válida, eu tento dnv com um px a menos
         # até encontrar uma posição em que eu possa me mover
-        if mapa.tiles[mapa.map[int((corners[0][0])//32)%21][int((corners[0][1]+speedX*dt)//32)%21]]['type'] == 'chao' and mapa.tiles[mapa.map[int((corners[1][0])//32)%21][int((corners[1][1]+speedX*dt)//32)%21]]['type'] == 'chao' and mapa.tiles[mapa.map[int((corners[2][0])//32)%21][int((corners[2][1]+speedX*dt)//32)%21]]['type'] == 'chao' and mapa.tiles[mapa.map[int((corners[3][0])//32)%21][int((corners[3][1]+speedX*dt)//32)%21]]['type'] == 'chao':
+        if mapa.tiles[mapa.map[int((corners[0][0])//32)%21][int((corners[0][1]+speedX*dt)//32)%21]]['type'] == 'chao'\
+            and mapa.tiles[mapa.map[int((corners[1][0])//32)%21][int((corners[1][1]+speedX*dt)//32)%21]]['type'] == 'chao'\
+            and mapa.tiles[mapa.map[int((corners[2][0])//32)%21][int((corners[2][1]+speedX*dt)//32)%21]]['type'] == 'chao'\
+            and mapa.tiles[mapa.map[int((corners[3][0])//32)%21][int((corners[3][1]+speedX*dt)//32)%21]]['type'] == 'chao':
             self.x += speedX*dt
         else:
             # se a soma da posição velocidade for um tile que o jogador não deveria conseguir entrar, então
@@ -246,37 +258,47 @@ class player(object):
             if speedX < 0:
                 x = self.x + speedX*dt
                 while(x < self.x):
-                    if mapa.tiles[mapa.map[int((corners[0][0])//32)%21][int((x+a)//32)%21]]['type'] == 'chao' and mapa.tiles[mapa.map[int((corners[2][0])//32)%21][int((x+a)//32)%21]]['type'] == 'chao':
+                    if mapa.tiles[mapa.map[int((corners[0][0])//32)%21][int((x+a)//32)%21]]['type'] == 'chao'\
+                        and mapa.tiles[mapa.map[int((corners[2][0])//32)%21][int((x+a)//32)%21]]['type'] == 'chao':
                         self.x = x
                         break
                     x+=1
             if speedX > 0:
                 x = self.x + speedX*dt
                 while(self.x < x):
-                    if mapa.tiles[mapa.map[int((corners[1][0])//32)%21][int((x+self.width-a)//32)%21]]['type'] == 'chao' and mapa.tiles[mapa.map[int((corners[3][0])//32)%21][int((x+self.width-a)//32)%21]]['type'] == 'chao':
+                    if mapa.tiles[mapa.map[int((corners[1][0])//32)%21][int((x+self.width-a)//32)%21]]['type'] == 'chao'\
+                        and mapa.tiles[mapa.map[int((corners[3][0])//32)%21][int((x+self.width-a)//32)%21]]['type'] == 'chao':
                         self.x = x
                         break
                     x-=1
 
         # atualiza corners agora que movemos o personagem no eixo x
-        corners = [[self.y+a, self.x+a], [self.y+a, self.x+self.width-a], [self.y+self.height-a, self.x+a], [self.y+self.height-a, self.x+self.width-a]]
+        corners = [[self.y+a, self.x+a],
+                   [self.y+a, self.x+self.width-a],
+                   [self.y+self.height-a, self.x+a],
+                   [self.y+self.height-a, self.x+self.width-a]]
 
         # mesma coisa que foi feita com o eixo x
-        if mapa.tiles[mapa.map[int((corners[0][0]+speedY*dt)//32)%21][int((corners[0][1])//32)%21]]['type'] == 'chao' and mapa.tiles[mapa.map[int((corners[1][0]+speedY*dt)//32)%21][int((corners[1][1])//32)%21]]['type'] == 'chao' and mapa.tiles[mapa.map[int((corners[2][0]+speedY*dt)//32)%21][int((corners[2][1])//32)%21]]['type'] == 'chao' and mapa.tiles[mapa.map[int((corners[3][0]+speedY*dt)//32)%21][int((corners[3][1])//32)%21]]['type'] == 'chao':
+        if mapa.tiles[mapa.map[int((corners[0][0]+speedY*dt)//32)%21][int((corners[0][1])//32)%21]]['type'] == 'chao'\
+            and mapa.tiles[mapa.map[int((corners[1][0]+speedY*dt)//32)%21][int((corners[1][1])//32)%21]]['type'] == 'chao'\
+            and mapa.tiles[mapa.map[int((corners[2][0]+speedY*dt)//32)%21][int((corners[2][1])//32)%21]]['type'] == 'chao'\
+            and mapa.tiles[mapa.map[int((corners[3][0]+speedY*dt)//32)%21][int((corners[3][1])//32)%21]]['type'] == 'chao':
             self.y += speedY*dt
         else:
             # Mesma coisa que foi feita com a velocidade x
             if speedY < 0:
                 y = self.y + speedY*dt
                 while(y < self.y):
-                    if mapa.tiles[mapa.map[int((y+a)//32)%21][int((corners[0][1])//32)%21]]['type'] == 'chao' and mapa.tiles[mapa.map[int((y+a)//32)%21][int((corners[1][1])//32)%21]]['type'] == 'chao':
+                    if mapa.tiles[mapa.map[int((y+a)//32)%21][int((corners[0][1])//32)%21]]['type'] == 'chao'\
+                        and mapa.tiles[mapa.map[int((y+a)//32)%21][int((corners[1][1])//32)%21]]['type'] == 'chao':
                         self.y = y
                         break
                     y += 1
             if speedY > 0:
                 y = self.y + speedY*dt
                 while(y > self.y):
-                    if mapa.tiles[mapa.map[int((y+self.height-a)//32)%21][int((corners[2][1])//32)%21]]['type'] == 'chao' and mapa.tiles[mapa.map[int((y+self.height-a)//32)%21][int((corners[3][1])//32)%21]]['type'] == 'chao':
+                    if mapa.tiles[mapa.map[int((y+self.height-a)//32)%21][int((corners[2][1])//32)%21]]['type'] == 'chao'\
+                        and mapa.tiles[mapa.map[int((y+self.height-a)//32)%21][int((corners[3][1])//32)%21]]['type'] == 'chao':
                         self.y = y
                         break
                     y -= 1
@@ -310,7 +332,7 @@ class player(object):
         self.maior_movimento_valido(dt, mapa, speedX, speedY)
 
         # chama a função responsavel por fazer os tiros do jogador
-        self.new_bullets(keys)
+        self.new_bullets()
 
     # desenha as balas e depois o jogador por cima delas
     def draw(self):

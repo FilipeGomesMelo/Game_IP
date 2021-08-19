@@ -262,11 +262,9 @@ def draw_all(game_state):
     king.draw()
 
     # desenha os corações do jogador
-    for j in range(king.max_health):
-        if j < king.health:
-            win.blit(heart_full, ((40*j)+5,5))
-        else:
-            win.blit(heart_empty, ((40*j)+5,5))
+    for j in range(min(king.max_health, 17)):
+        if j < king.health: win.blit(heart_full, ((40*j)+5,5))
+        else: win.blit(heart_empty, ((40*j)+5,5))
 
     # desenha a caixa onde o item atual aparece
     win.blit(canvas, (620,5))
