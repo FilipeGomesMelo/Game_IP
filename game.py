@@ -96,7 +96,7 @@ def main():
     ticks_last_enemy = 0
 
     # mude para true para ver o fps
-    show_fps = False
+    show_fps = True
     if show_fps:
         font = pg.font.Font(None, 20)
     clock = pg.time.Clock()
@@ -127,7 +127,7 @@ def main():
             # responsavel por spawnar os inimigos
             dt_enemy = t - ticks_last_enemy
             if dt_enemy > enemy_time  and king.active_item['clock'] == -1:
-                zombies.append(ini.inimigo(32, 32, win, WINDOW_WIDTH, WINDOW_HEIGHT, mapa))
+                zombies.append(ini.inimigo(32, 32, win, WINDOW_WIDTH, WINDOW_HEIGHT, mapa, zombies))
                 ticks_last_enemy = t
 
             # update o jogador e as balas
@@ -206,10 +206,10 @@ def main():
                 # quando a função update do zombie recebe -1, eles não se movem
                 # se o item 'clock' está ativado, os inimigos não saem do lugar
                 if king.active_item['clock'] != -1:
-                    zombie.update(-1, -1, dt, mapa, path)
+                    zombie.update(-1, -1, dt, mapa, path, zombies)
                 else:
                     # caso contrario, os inimigos recebem a posição atual do jogador para poder se mover em sua direção
-                    zombie.update(king.x, king.y, dt, mapa, path)
+                    zombie.update(king.x, king.y, dt, mapa, path, zombies)
 
             # desativa o item 'clock' se ele já está ativo a tempo suficiente
             if t-king.active_item['clock'] > king.item_duration/2:

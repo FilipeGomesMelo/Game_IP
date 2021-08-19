@@ -64,7 +64,7 @@ class player(object):
         self.projectile_hit_wall = pg.mixer.Sound("sounds/projectile_wall.wav")
 
         # vida do jogador
-        self.max_health = 3
+        self.max_health = 300
         self.health = self.max_health
 
         # item atual do jogador
