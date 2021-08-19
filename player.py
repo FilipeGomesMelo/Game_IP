@@ -343,11 +343,10 @@ class player(object):
         # se o jogador estiver invulnerável, ele ficara "piscando", sendo desenhado frame sim e frame não     
         if self.i_frames:
             # só desenha nos frames pares desde o frame em que o jogador levou o dano
-            if self.blink % 2 == 0:
-                self.blink += 1
+            if self.blink % 4 < 2:    
                 self.win.blit(self.img, (self.x, self.y))
-            else:
-                self.blink += 1
+            
+            self.blink += 1
         # caso contrário, desenhe o jogador normalmente        
         else:
             self.win.blit(self.img, (self.x, self.y))
