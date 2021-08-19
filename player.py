@@ -90,20 +90,20 @@ class player(object):
             y = atual[1][1]
             dist = atual[0]
             for move_x, move_y in moves:
-                try:
-                    if abs(move_x+move_y) != 1:
-                        if (not matriz[y+move_y][x+move_x] or matriz[y+move_y][x+move_x][0] > dist+1.4)\
-                            and mapa.tiles[mapa.map[y+move_y][x+move_x]]['type'] in ['chao', 'spawn']\
-                            and (mapa.tiles[mapa.map[y][x+move_x]]['type'] in ['chao', 'spawn'] \
-                            or mapa.tiles[mapa.map[y+move_y][x]]['type'] in ['chao', 'spawn']):
-                            heapq.heappush(fila,([dist+1.4, (x+move_x, y+move_y)]))
-                            matriz[y+move_y][x+move_x] = [dist+1.4, (x*32+16, y*32+16)]
-                    elif (not matriz[y+move_y][x+move_x] or matriz[y+move_y][x+move_x][0] > dist+1) and mapa.tiles[mapa.map[y+move_y][x+move_x]]['type'] in ['chao', 'spawn']:
-                        heapq.heappush(fila,([dist+1, (x+move_x, y+move_y)]))
-                        matriz[y+move_y][x+move_x] = [dist+1, (x*32+16, y*32+16)]     
-                except:
-                    pass
-        
+                if x+move_x < 0 or y+move_y < 0: continue
+                if x+move_x >= len(mapa.map[0]) or y+move_y >= len(mapa.map): continue
+
+                if abs(move_x+move_y) != 1:
+                    if (not matriz[y+move_y][x+move_x] or matriz[y+move_y][x+move_x][0] > dist+1.4)\
+                        and mapa.tiles[mapa.map[y+move_y][x+move_x]]['type'] in ['chao', 'spawn']\
+                        and (mapa.tiles[mapa.map[y][x+move_x]]['type'] in ['chao', 'spawn'] \
+                        and mapa.tiles[mapa.map[y+move_y][x]]['type'] in ['chao', 'spawn']):
+                        heapq.heappush(fila,([dist+1.4, (x+move_x, y+move_y)]))
+                        matriz[y+move_y][x+move_x] = [dist+1.4, (x*32+16, y*32+16)]
+                elif (not matriz[y+move_y][x+move_x] or matriz[y+move_y][x+move_x][0] > dist+1) and mapa.tiles[mapa.map[y+move_y][x+move_x]]['type'] in ['chao', 'spawn']:
+                    heapq.heappush(fila,([dist+1, (x+move_x, y+move_y)]))
+                    matriz[y+move_y][x+move_x] = [dist+1, (x*32+16, y*32+16)]     
+
         return matriz
     # checa se o jogador está tocando um inimigo
     def check_enemy(self, enemies, t):
