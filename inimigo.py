@@ -78,7 +78,7 @@ class inimigo(object):
         # a representa a diferença entre o tamanho real do sprite do jogador e da "hitbox" com o mapa
         # isso serve para cirar uma janela de pixels maior para passar por espaços pequenos de um tile
         a = 2
-
+        if speedX == 0 and speedY == 0: return
         # corners salva os extremos da "hitbox"
         corners = [[self.y+a, self.x+a],
                    [self.y+a, self.x+self.width-a],
