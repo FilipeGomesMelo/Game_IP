@@ -66,19 +66,21 @@ class item(object):
     # detecta colisão com o jogador
     def player_colision(self, player):
         # os quatro cantos da hitbox do item
-        corners = [[self.x, self.y], [self.x+self.width, self.y], [self.x, self.y+self.height], [self.x+self.width, self.y+self.height]]
+        corners = [[self.x, self.y],
+                   [self.x+self.width, self.y],
+                   [self.x, self.y+self.height],
+                   [self.x+self.width, self.y+self.height]]
 
         # checa se qualquer um dos quatro cantos está dentro do jogador
         for corner in corners:
-            if player.x <= corner[0] <= player.x+player.width and player.y <= corner[1] <= player.y+player.height:
+            if player.x <= corner[0] <= player.x+player.width\
+                and player.y <= corner[1] <= player.y+player.height:
                 # destroi o item
                 self.existes = False
                 # e retorna o tipo de item que foi coletado
                 return self.type
         return -1
             
-
-
     def update(self, t):
         # se o item existe a mais tempo do que deveria, destroi o item
         if t - self.t >= self.duration:

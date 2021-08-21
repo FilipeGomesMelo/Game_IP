@@ -127,11 +127,12 @@ def main():
             # responsavel por spawnar os inimigos
             dt_enemy = t - ticks_last_enemy
             if dt_enemy > enemy_time  and king.active_item['clock'] == -1:
-                zombies.append(ini.inimigo(32, 32, win, WINDOW_WIDTH, WINDOW_HEIGHT, mapa))
+                zombies.append(ini.inimigo(32, 32, win, WINDOW_WIDTH, WINDOW_HEIGHT, mapa, zombies))
                 ticks_last_enemy = t
 
             # update o jogador e as balas
             king.update(dt, mapa)
+            path = king.path_creator(mapa)
 
             # reseta tudo e troca de mapa se o jogador morrer
             if king.health <= 0:
@@ -147,7 +148,7 @@ def main():
                 killed = bullet.check_enemy(zombies)
                 # check_enemy() retorna -1 se a bala não está tocando em nenhum inimigo, caso contrario, ela retorna o inimigo
                 if killed != -1:
-                    if enemy_time > 300:
+                    if enemy_time > 350:
                         enemy_time -= 5
                     # toca o som de morte do inimigo
                     enemy_death.play()
@@ -200,16 +201,15 @@ def main():
                 if item.existes == False:
                     items.pop(items.index(item))
 
-            # print(king.current_item, collected_itens)
             # update do inimigo
             for zombie in zombies:
                 # quando a função update do zombie recebe -1, eles não se movem
                 # se o item 'clock' está ativado, os inimigos não saem do lugar
                 if king.active_item['clock'] != -1:
-                    zombie.update(-1, -1, dt, mapa)
+                    zombie.update(-1, -1, dt, mapa, path, zombies)
                 else:
                     # caso contrario, os inimigos recebem a posição atual do jogador para poder se mover em sua direção
-                    zombie.update(king.x, king.y, dt, mapa)
+                    zombie.update(king.x, king.y, dt, mapa, path, zombies)
 
             # desativa o item 'clock' se ele já está ativo a tempo suficiente
             if t-king.active_item['clock'] > king.item_duration/2:
@@ -219,9 +219,6 @@ def main():
             if king.check_enemy(zombies, t):
                 damage_sound.play()
             
-            # isso é usa solução temporária para mostrar o item atual e a vida do jogador
-            # o plano é mover isso para a tela do jogo
-
         # desenha tudo 
         draw_all(game_state)
 
@@ -265,11 +262,9 @@ def draw_all(game_state):
     king.draw()
 
     # desenha os corações do jogador
-    for j in range(king.max_health):
-        if j < king.health:
-            win.blit(heart_full, ((40*j)+5,5))
-        else:
-            win.blit(heart_empty, ((40*j)+5,5))
+    for j in range(min(king.max_health, 17)):
+        if j < king.health: win.blit(heart_full, ((40*j)+5,5))
+        else: win.blit(heart_empty, ((40*j)+5,5))
 
     # desenha a caixa onde o item atual aparece
     win.blit(canvas, (620,5))
