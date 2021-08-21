@@ -148,7 +148,7 @@ def main():
                 killed = bullet.check_enemy(zombies)
                 # check_enemy() retorna -1 se a bala não está tocando em nenhum inimigo, caso contrario, ela retorna o inimigo
                 if killed != -1:
-                    if enemy_time > 300:
+                    if enemy_time > 350:
                         enemy_time -= 5
                     # toca o som de morte do inimigo
                     enemy_death.play()

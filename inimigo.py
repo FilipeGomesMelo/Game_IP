@@ -50,7 +50,7 @@ class inimigo(object):
         self.img = pygame.transform.scale(pygame.image.load('images/inimigo.png'), (self.width, self.height))
 
         # velocidade do inimigo
-        self.vel = 0.1
+        self.vel = 0.08
 
         self.count = 0
 
