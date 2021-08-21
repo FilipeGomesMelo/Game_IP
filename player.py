@@ -1,4 +1,4 @@
-import pygame as pg
+﻿import pygame as pg
 import projectile as proj
 from math import atan2, degrees, pi
 import heapq

@@ -85,6 +85,18 @@ class inimigo(object):
                    [self.y+self.height-a, self.x+a],
                    [self.y+self.height-a, self.x+self.width-a]]
 
+        if mapa.tiles[mapa.map[int((corners[0][0])//32)%21][int((corners[0][1]-1)//32)%21]]['type'] in ['parede', 'passar']\
+            or mapa.tiles[mapa.map[int((corners[1][0])//32)%21][int((corners[1][1]+1)//32)%21]]['type'] in ['parede', 'passar']\
+            or mapa.tiles[mapa.map[int((corners[2][0])//32)%21][int((corners[2][1]-1)//32)%21]]['type'] in ['parede', 'passar']\
+            or mapa.tiles[mapa.map[int((corners[3][0])//32)%21][int((corners[3][1]+1)//32)%21]]['type'] in ['parede', 'passar']:
+            speedY = self.vel if speedY > 0 else -self.vel
+        elif mapa.tiles[mapa.map[int((corners[0][0]-1)//32)%21][int((corners[0][1])//32)%21]]['type'] in ['parede', 'passar']\
+            or mapa.tiles[mapa.map[int((corners[1][0]-1)//32)%21][int((corners[1][1])//32)%21]]['type'] in ['parede', 'passar']\
+            or mapa.tiles[mapa.map[int((corners[2][0]+1)//32)%21][int((corners[2][1])//32)%21]]['type'] in ['parede', 'passar']\
+            or mapa.tiles[mapa.map[int((corners[3][0]+1)//32)%21][int((corners[3][1])//32)%21]]['type'] in ['parede', 'passar']:
+            speedX = self.vel if speedX > 0 else -self.vel
+
+
         # move o inimigo somente se a posição final for em um bloco tipo 'chão'
         # basicamente, se eu for me mover para uma posição e essa posição não for válida, eu tento dnv com um px a menos
         # até encontrar uma posição em que eu possa me mover
