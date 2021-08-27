@@ -11,13 +11,6 @@ class item(object):
         # quantidade de ticks no momento em que o item foi criado
         self.t = t
 
-        # coordenadas do item
-        self.x = x
-        self.y = y
-
-        # janela do item
-        self.win = window
-
         # seleciona o item com um número aleatório 
         if 0 <= rand < 20:
             self.type = 'coin'
@@ -47,6 +40,13 @@ class item(object):
             self.type = 'clock'
             self.width = 32
             self.height = 32
+
+        # coordenadas do item
+        self.x = x+16-self.width//2
+        self.y = y+16-self.height//2
+
+        # janela do item
+        self.win = window
 
         # imformações dos itens
         self.img = {'coin': pg.transform.scale(pg.image.load('images/coin.png'), (18,18)),

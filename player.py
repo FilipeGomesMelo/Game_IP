@@ -360,6 +360,9 @@ class player(object):
         for bullet in self.bullets:
             if bullet.existe:
                 bullet.update(dt, mapa)
-            if not(bullet.existe):
+            if bullet.existe == 0:
+                self.projectile_hit_wall.play()
+                self.bullets.pop(self.bullets.index(bullet))
+            if bullet.existe == -1:
                 self.projectile_hit_wall.play()
                 self.bullets.pop(self.bullets.index(bullet))

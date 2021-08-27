@@ -11,7 +11,7 @@ class projectile(object):
     # inicializa o priojétil
     def __init__(self, x, y, width, height, window, WINDOW_WIDTH, WINDOW_HEIGHT, direction):
         # define se a bala existe ou não
-        self.existe = True
+        self.existe = 1
 
         # posição x e y da bala
         self.x = x
@@ -47,7 +47,7 @@ class projectile(object):
             # se qualquer um dos cantos da bala está dentro do inimigo, então retorna o inimigo que está tocando
             for corner in corners:
                 if enemy.x+1 <= corner[0] <= enemy.x + enemy.width and enemy.y <= corner[1] <= enemy.y + enemy.height:
-                    self.existe = False
+                    self.existe = -1
                     return enemy
         # se não está tocando em nenhum inimigo, retorna -1
         return -1
@@ -73,10 +73,10 @@ class projectile(object):
 
         # garante que a bala não sai da tela
         if not(0 < self.x < self.WINDOW_WIDTH and 0 < self.y < self.WINDOW_HEIGHT) or not(0 < self.x + self.width < self.WINDOW_WIDTH and 0 < self.y < self.WINDOW_HEIGHT):
-            self.existe = False
+            self.existe = 0
         if self.existe:
             if mapa.tiles[mapa.map[int(self.y//32)%21][int(self.x//32)%21]]['type'] == 'parede' or mapa.tiles[mapa.map[int((self.y)//32)%21][int((self.x+self.width)//32)%21]]['type'] == 'parede' or mapa.tiles[mapa.map[int((self.y+self.height)//32)%21][int((self.x+self.width)//32)%21]]['type'] == 'parede' or mapa.tiles[mapa.map[int((self.y+self.height)//32)%21][int((self.x)//32)%21]]['type'] == 'parede':
-                self.existe = False
+                self.existe = 0
 
     # desenha essa bala
     def draw(self):

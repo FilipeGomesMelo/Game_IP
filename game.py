@@ -50,6 +50,9 @@ zombies = []
 # cria a lista que guarda todos os itens
 items = []
 
+# cria lista de particulas de morte dos inimigos
+dead_particle = []
+
 # dicionário que salva a quantidade de cada itens coletados
 collected_itens = {'coin': 0,
                     'boots': 0,
@@ -126,8 +129,8 @@ def main():
         if game_state == 'play':
             # responsavel por spawnar os inimigos
             dt_enemy = t - ticks_last_enemy
-            if dt_enemy > enemy_time  and king.active_item['clock'] == -1:
-                zombies.append(ini.inimigo(32, 32, win, WINDOW_WIDTH, WINDOW_HEIGHT, mapa, zombies))
+            if dt_enemy > enemy_time and king.active_item['clock'] == -1:
+                zombies.append(ini.zomb(32, 32, win, WINDOW_WIDTH, WINDOW_HEIGHT, mapa, zombies))
                 ticks_last_enemy = t
 
             # update o jogador e as balas
@@ -146,12 +149,16 @@ def main():
             # checka por inimigos em todas as balas
             for bullet in king.bullets:
                 killed = bullet.check_enemy(zombies)
+                if killed == -1: continue
+                
+                killed.health -= 1
                 # check_enemy() retorna -1 se a bala não está tocando em nenhum inimigo, caso contrario, ela retorna o inimigo
-                if killed != -1:
+                if killed.health <= 0:
                     if enemy_time > 350:
                         enemy_time -= 5
                     # toca o som de morte do inimigo
                     enemy_death.play()
+                    dead_particle.append(ini.dead_particle(killed.x, killed.y, win))
                     # remove o inimigo da lista de inimigos
                     zombies.pop(zombies.index(killed))
                     # gera um número aleatório que vai determinar o item
@@ -211,6 +218,10 @@ def main():
                     # caso contrario, os inimigos recebem a posição atual do jogador para poder se mover em sua direção
                     zombie.update(king.x, king.y, dt, mapa, path, zombies)
 
+            for i, d in enumerate(dead_particle):
+                if d.count > 600:
+                    dead_particle.pop(i)              
+
             # desativa o item 'clock' se ele já está ativo a tempo suficiente
             if t-king.active_item['clock'] > king.item_duration/2:
                 king.active_item['clock'] = -1
@@ -249,6 +260,9 @@ i = 1
 def draw_all(game_state):
     # desenha o mapa
     mapa.draw()
+
+    for particle in dead_particle:
+        particle.draw()
 
     # desenhar inimigos
     for zombie in zombies:
@@ -322,6 +336,9 @@ def reset_all():
     global king 
     # recria o jogador 
     king =  pl.player((WINDOW_WIDTH // 2)-16, (WINDOW_HEIGHT // 2)-16, 32, 32, win, WINDOW_WIDTH, WINDOW_HEIGHT)
+
+    global dead_particle
+    dead_particle = []
 
     global zombies
     # recria a lista de inimigos como uma lista vazia, removendo todos inimigos

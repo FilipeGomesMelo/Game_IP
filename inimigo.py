@@ -1,7 +1,9 @@
 import pygame
 from math import atan2, pi, cos, sin
-from random import seed, shuffle
+from random import seed, shuffle, random
 from datetime import datetime
+
+from pygame.surfarray import pixels_green
 
 # inicializa pygame
 pygame.init()
@@ -11,7 +13,7 @@ pygame.init()
 #   e move ele em linha reta na direção do jogador                                          #
 #############################################################################################
 
-class inimigo(object):
+class zomb(object):
     # inicializa o inimigo
     def __init__(self, width, height, window, WINDOW_WIDTH, WINDOW_HEIGHT, mapa, enemies):
         # cria uma seed para escolher o ponto de spawn aleatório
@@ -53,6 +55,8 @@ class inimigo(object):
         self.vel = 0.08
 
         self.count = 0
+
+        self.health = 1
 
     # desenha o inimigo na tela
     def draw(self):
@@ -196,3 +200,32 @@ class inimigo(object):
 
         # calcula o maior movimento válido
         self.maior_movimento_valido(dt, mapa, speedX, speedY, enemies)
+
+def does_not_flip(obj, value1, value2):
+    return obj
+
+class dead_particle:
+    def __init__(self, x, y, window):
+        self.x = x
+        self.y = y
+
+        func = does_not_flip
+        if random() < 0.5:
+            func =  pygame.transform.flip
+
+        self.images = [func(pygame.transform.scale(pygame.image.load('images/dead1.png'), (32,32)), True, False),
+                       func(pygame.transform.scale(pygame.image.load('images/dead2.png'), (32,32)), True, False),
+                       func(pygame.transform.scale(pygame.image.load('images/dead3.png'), (32,32)), True, False),
+                       func(pygame.transform.scale(pygame.image.load('images/dead4.png'), (32,32)), True, False),
+                       func(pygame.transform.scale(pygame.image.load('images/dead5.png'), (32,32)), True, False),
+                       func(pygame.transform.scale(pygame.image.load('images/dead6.png'), (32,32)), True, False)]
+        self.count = 0
+        self.win = window
+    
+    def draw(self):
+        try:        
+            self.win.blit(self.images[self.count//4], (self.x, self.y))
+        except:
+            self.win.blit(self.images[5], (self.x, self.y))
+        self.count += 1
+        
