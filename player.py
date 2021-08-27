@@ -64,7 +64,7 @@ class player(object):
         self.projectile_hit_wall = pg.mixer.Sound("sounds/projectile_wall.wav")
 
         # vida do jogador
-        self.max_health = 3
+        self.max_health = 500
         self.health = self.max_health
 
         # item atual do jogador
@@ -81,7 +81,7 @@ class player(object):
         heapq.heappush(fila,([0, (x, y)]))
         
         matriz = [[None for _ in range(len(mapa.map[0]))] for _ in range(len(mapa.map))]
-        matriz[y][x] = (self.x+self.width//2, self.y+self.height//2)
+        matriz[y][x] = [0, (self.x+self.width//2, self.y+self.height//2)]
         moves = [(0,1), (1,1), (1,0), (1,-1), (0,-1), (-1,-1), (-1,0), (-1,1)]
 
         while fila:
