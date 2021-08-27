@@ -223,9 +223,9 @@ class dead_particle:
         self.win = window
     
     def draw(self):
-        try:        
+        if self.count//4 < len(self.images):
             self.win.blit(self.images[self.count//4], (self.x, self.y))
-        except:
+        else:
             self.win.blit(self.images[5], (self.x, self.y))
         self.count += 1
         
