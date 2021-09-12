@@ -31,8 +31,8 @@ WINDOW_WIDTH = 672
 WINDOW_HEIGHT = 672
 
 # setup da tela
-win = pg.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT), pg.SCALED|pg.RESIZABLE)
-pg.display.set_caption("Unitled Wizard Game")
+win = pg.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
+pg.display.set_caption("Untitled Wizard Game")
 
 # setup icone da tela
 icon = pg.image.load('images/wizard.png')
