@@ -15,6 +15,11 @@
 
   O jogador começa cada fase com 3 de vida, perdendo um de vida sempre que colide com um inimigo, as botas e cristais são upgrades permanentes enquanto os pergaminhos são itens consumíveis, podendo ter mais de um ativo ao mesmo tempo, mas apenas guardando um no inventário de cada vez, se você já tem um pergaminho no iventário e coleta um novo pergaminho esse pergaminho sera usado automaticamente.
 
+# Como Baixar e Jogar:
+  Para rodar o jogo basta ter python e pygame instalados, baixar o zip ou clonar esse repositório e rodar o arquivo game.py no diretório do arquivo. 
+ 
+  controles: wasd para movimento, botão esquerdo do mouse para atirar, tecla de espaço para ativar o pergaminho atual.
+
 ## Divisão de tarefas:
 |            Equipe              |          Tarefas           |
 | ------------------------------ | -------------------------- |
@@ -139,11 +144,6 @@ Design IU e Armazenamento De Itens Coletados:
 > A programação em equipe já é um grande desafio, e se torna ainda maior quando se usa uma ferramenta (Github) que pouco se conhece, ou que não se tem muita experiencia, contudo a programação em equipe se torna vantajosa apartir do momento que se encontram algumas barreiras e dificuldades, pois algumas dificuldades para alguns podem não ser para outros e vice-versa.
 - **Pygame**:
 > O _pygame_ foi um dos grandes desafios para toda equipe, pois foi um instrumento de uso obrigatório, em que todos deveriam saber sobre e entender o mínimo, para de imediato começarmos a trabalhar. Muitas coisas foram aprendidas com o uso dessa vasta biblioteca, que vai desde a criação de um simples quadrado movél na tela, até um jogo mais complexo conforme foi apresentado em nosso projeto. 
-
-# Como rodar e Jogar:
-  Para rodar o jogo basta baixar o zip ou clonar esse repositório e rodar o arquivo game.py, assumindo que você já tem python e pygame instalados. 
- 
-  controles: wasd para movimento, botão esquerdo do mouse para atirar, tecla de espaço para ativar o pergaminho atual.
 
 #
 ###### *Projeto referente a matéria de Introdução a programação/CIN-UFPE no periodo de 2020.2. Começamos em 12/08/2021*
