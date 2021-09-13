@@ -138,12 +138,7 @@ Design IU e Armazenamento De Itens Coletados:
 
 ## Desafios/Experiência:
 
-- **Github**:
-> Inicialmente, o _Github_ foi um grande desafio para todos no grupo, pois poucos tinham conhecimento dessa ferramenta. Muitos conceitos foram aprendidos a partir de seu estudo, tanto a criação de um novo repositório quanto fazer um _git pull_, _pull request_, criar _branch_, e até mesmo aprender a formatação texto de um arquivo legivel (_README_).   
-- **Programação em equipe**:
-> A programação em equipe já é um grande desafio, e se torna ainda maior quando se usa uma ferramenta (Github) que pouco se conhece, ou que não se tem muita experiencia, contudo a programação em equipe se torna vantajosa apartir do momento que se encontram algumas barreiras e dificuldades, pois algumas dificuldades para alguns podem não ser para outros e vice-versa.
-- **Pygame**:
-> O _pygame_ foi um dos grandes desafios para toda equipe, pois foi um instrumento de uso obrigatório, em que todos deveriam saber sobre e entender o mínimo, para de imediato começarmos a trabalhar. Muitas coisas foram aprendidas com o uso dessa vasta biblioteca, que vai desde a criação de um simples quadrado movél na tela, até um jogo mais complexo conforme foi apresentado em nosso projeto. 
+> Coordenar o trabalho da equipe, quem vai fazer o que, como cada pessoa está fazendo sua parte, como juntar o que foi feito, assim como o uso do github, ferramenta que muitos dos membros do grupo não estavam familiarizados, foram alguns dos maiores problemas encontrados, a forma como nós organizamos o GitHub foi por meio de um único repositório do qual todos criaram forks, onde novas features eram desenvolvidas e passadas para o repositório original usando pull requests, o que pode não ter sido a melhor abordagem, visto que ter que manter o fork atualizado com o repositório original assim como criar pull request para qualquer pequena mudança criou uma camada de dificuldade que poderia não existir se todos estivessem trabalhando em um único repositório, cada um com o seu branch. Esses problemas foram agravados pelo trabalho remoto. Se esse fosse um período convencional, nós poderíamos marcar horários para trabalhar em conjunto pessoalmente no laboratório, ajudando um ao outro e melhor controlando o desenvolvimento do projeto. Outra grande dificuldade para a maioria do grupo foi se familiarizar com uma ferramenta nunca utilizada antes, aprender a usar Pygame para desenvolver um jogo, mesmo que ‘simples’, foi difícil para boa parte dos membros. 
 
 #
 ###### *Projeto referente a matéria de Introdução a programação/CIN-UFPE no periodo de 2020.2. Começamos em 12/08/2021*
