@@ -141,7 +141,9 @@ Design IU e Armazenamento De Itens Coletados:
 > O _pygame_ foi um dos grandes desafios para toda equipe, pois foi um instrumento de uso obrigatório, em que todos deveriam saber sobre e entender o mínimo, para de imediato começarmos a trabalhar. Muitas coisas foram aprendidas com o uso dessa vasta biblioteca, que vai desde a criação de um simples quadrado movél na tela, até um jogo mais complexo conforme foi apresentado em nosso projeto. 
 
 # Como rodar e Jogar:
-  Para rodar o jogo basta baixar o zip ou clonar esse repositório e rodar o arquivo game.py, assumindo que você já tem python e pygame instalados.
+  Para rodar o jogo basta baixar o zip ou clonar esse repositório e rodar o arquivo game.py, assumindo que você já tem python e pygame instalados. 
+ 
+  controles: wasd para movimento, botão esquerdo do mouse para atirar, tecla de espaço para ativar o pergaminho atual.
 
 #
 ###### *Projeto referente a matéria de Introdução a programação/CIN-UFPE no periodo de 2020.2. Começamos em 12/08/2021*
