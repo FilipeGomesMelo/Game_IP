@@ -25,7 +25,7 @@
 | **Felipe Guimarães** | Novos Sprites |
 
 ## Link para o codigo fonte:
-- https://github.com/tvas20/death_maze
+- https://github.com/FilipeGomesMelo/Game_IP
 
 ## Organização do código:
   O código é separado em seis módulos, cada um contendo uma ou mais classes responsáveis pelo funcionamento do jogo, o módulo _game_ é o componente principal liga todos os outros:
