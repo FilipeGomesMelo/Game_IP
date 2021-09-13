@@ -1,5 +1,5 @@
 # Nota: 
-  O código original entregue durante a cadeira em 2020.3 se encontra no branch Original, o ramo main possui alguma mudanças
+  O código original entregue durante a cadeira em 2020.3 se encontra no branch Original, o ramo main possui alguma mudanças de animações e colisão e movimento dos inimigos.
 
 # Untitled Wizard Game
   Untitled Wizard Game é um jogo top-down shooter desenvolvido usando Pygame baseado no minigame _Journey of The Prairie King_ de _Stardew Valley_, de onde tiramos grande parte dos sprites além da música de fundo. O jogador controla um mago e deve matar as hordas de zumbis para coletar moedas que servem como pontuação, utilizando os itens que os inimigos dropam para poder se manter vivo o máximo de tempo possivel e coletar a maior quantidade de moedas antes de morrer e passar para a próxima fase. 
