@@ -4,21 +4,33 @@
 # Untitled Wizard Game
   Untitled Wizard Game é um jogo top-down shooter desenvolvido usando Pygame baseado no minigame _Journey of The Prairie King_ de _Stardew Valley_, de onde tiramos grande parte dos sprites além da música de fundo. O jogador controla um mago e deve matar as hordas de zumbis para coletar moedas que servem como pontuação, utilizando os itens que os inimigos dropam para poder se manter vivo o máximo de tempo possivel e coletar a maior quantidade de moedas antes de morrer e passar para a próxima fase. 
 
-  Os itens são:
-  - moedas simples (1 ponto)
-  - moedas especiais (10 pontos)
-  - botas aladas (aumento permanente de velocidade movimento)
-  - cristais mágicos (aumento permantente de velocidade de tiro)
-  - pergaminho vermelho (aumento temporário de velocidade de tiro)
-  - pergaminho roxo (aumento temporário da quantidade de tiros)
-  - pergaminho azul (temporariamente paralisa os inimigos)
-
   O jogador começa cada fase com 3 de vida, perdendo um de vida sempre que colide com um inimigo, as botas e cristais são upgrades permanentes enquanto os pergaminhos são itens consumíveis, podendo ter mais de um ativo ao mesmo tempo, mas apenas guardando um no inventário de cada vez, se você já tem um pergaminho no iventário e coleta um novo pergaminho esse pergaminho sera usado automaticamente.
 
 # Como Baixar e Jogar:
   Para rodar o jogo basta ter python e pygame instalados, baixar o zip ou clonar esse repositório e rodar o arquivo game.py no diretório do arquivo. 
  
-  controles: wasd para movimento, botão esquerdo do mouse para atirar, tecla de espaço para ativar o pergaminho atual.
+  O seu objetivo é coletar a maior pontuação possível nas 3 fases.
+  
+  Sua vida, pontuação e quantidade de itens coletados aparece no canto superior esquerdo, o pergaminho atual aparece no canto superior direito.
+ 
+  Controles:
+  |            Teclas              |          Descrição           |
+  | ------------------------------ | -------------------------- |
+  | **W-A-S-D** | movimento |
+  | **mouse** | mira |
+  | **botão esquerdo do mouse** | atira |
+  | **tecla de espaço** | ativa o pergaminho atual |
+  
+  Itens:
+  |            Itens              |          Efeitos           |
+  | ------------------------------ | -------------------------- |
+  | **moedas simples** | 1 ponto |
+  | **moedas especiais** | 10 pontos |
+  | **botas aladas** | aumento permanente de velocidade movimento |
+  | **cristais mágicos** | aumento permantente de velocidade de tiro |
+  | **pergaminho vermelho** | aumento temporário de velocidade de tiro |
+  | **pergaminho roxo** | aumento temporário da quantidade de tiros |
+  | **pergaminho azul** | temporariamente paralisa os inimigos |
 
 ## Divisão de tarefas:
 |            Equipe              |          Tarefas           |
